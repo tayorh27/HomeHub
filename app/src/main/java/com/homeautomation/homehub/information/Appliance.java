@@ -13,4 +13,8 @@ public class Appliance {
         this.name = name;
         this.color = color;
     }
+
+    public Appliance(){
+
+    }
 }
