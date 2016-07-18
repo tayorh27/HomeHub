@@ -67,7 +67,7 @@ public class AddAppliances extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_send:
-                MyApplication.getWritableDatabase().insertMyPost(current,false);
+                //MyApplication.getWritableDatabase().insertMyPost(current,false);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -92,8 +92,8 @@ public class AddAppliances extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(editText.getText().length() > 0) {
                     String app_name = editText.getText().toString();
-                    int last = MyApplication.getWritableDatabase().getLastId();
-                    Appliance appliance = new Appliance(last+1, app_name, "");
+                    //int last = MyApplication.getWritableDatabase().getLastId();
+                    Appliance appliance = new Appliance(app_name, "");
                     current.add(appliance);
                     MyApplication.getWritableDatabase().insertMyPost(current,false);
                     ShowAll();

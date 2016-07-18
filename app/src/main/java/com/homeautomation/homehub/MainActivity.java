@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ArrayList<Appliance> c = new ArrayList<>();
-        Appliance appliance = new Appliance(1,"none","");
+        Appliance appliance = new Appliance("none","");
         c.add(appliance);
         //MyApplication.getWritableDatabase().insertMyPost(c,false);
 

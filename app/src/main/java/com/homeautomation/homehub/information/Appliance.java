@@ -14,6 +14,11 @@ public class Appliance {
         this.color = color;
     }
 
+    public Appliance(String name, String color){
+        this.name = name;
+        this.color = color;
+    }
+
     public Appliance(){
 
     }

@@ -1,27 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linearLayout"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp">
+    android:layout_margin="30dp"
+    android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/app_name"
+        android:layout_height="match_parent">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Appliance Name (compulsory)"/>
-    </android.support.design.widget.TextInputLayout>
+            android:orientation="vertical">
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Appliance Name"/>
-    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/app_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Appliance Name (compulsory)" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TableRow>
+
+                    <ImageButton
+                        android:id="@+id/avatar1"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/red" />
+
+                    <ImageButton
+                        android:id="@+id/avatar3"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/pink"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar2"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/purple"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar10"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/teal"/>
+                    <ImageButton
+                        android:id="@+id/avatar11"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/green"/>
+
+                </TableRow>
+
+                <TableRow>
+
+                    <ImageButton
+                        android:id="@+id/avatar8"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/deep_purple"/>
+                    <ImageButton
+                        android:id="@+id/avatar9"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/indigo"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar4"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar5"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/light_blue" />
+
+                    <ImageButton
+                        android:id="@+id/avatar6"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/cyan" />
+                </TableRow>
+
+                <TableRow>
+
+                    <ImageButton
+                        android:id="@+id/avatar13"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/light_green"/>
+                    <ImageButton
+                        android:id="@+id/avatar14"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/lime"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar15"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/yellow"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar16"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/amber" />
+
+                    <ImageButton
+                        android:id="@+id/avatar17"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/orange" />
+                </TableRow>
+
+                <TableRow>
+
+                    <ImageButton
+                        android:id="@+id/avatar18"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/deep_orange"/>
+                    <ImageButton
+                        android:id="@+id/avatar19"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/brown"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar20"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/grey"/>
+
+                    <ImageButton
+                        android:id="@+id/avatar21"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/blue_grey" />
+
+                    <ImageButton
+                        android:id="@+id/avatar22"
+                        style="@style/Widget.AppCompat.ImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_margin="10dp"
+                        android:layout_weight="1"
+                        android:background="@color/black" />
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+    </ScrollView>
+
 
 </LinearLayout>
