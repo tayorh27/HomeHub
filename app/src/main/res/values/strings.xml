@@ -3,4 +3,12 @@
     <string name="title_activity_add_appliances">Add Appliances</string>
     <string name="send">Send</string>
     <string name="Reg">Register</string>
+    <string name="refresh">Refresh</string>
+    <string name="title_activity_home_hub">HomeHub</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_paired">Paired Devices</string>
 </resources>

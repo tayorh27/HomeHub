@@ -34,9 +34,19 @@ public class UserLocalDatabase {
         return user;
     }
 
-    public void setUserExist(boolean log){
+    public void setAppliancesAdded(boolean add){
         SharedPreferences.Editor editor = userPreference.edit();
-        editor.putBoolean("logged",log);
+        editor.putBoolean("add",add);
+        editor.apply();
+    }
+
+    public boolean getAppliancesAdded(){
+        return userPreference.getBoolean("logged",false);
+    }
+
+    public void setUserExist(boolean add){
+        SharedPreferences.Editor editor = userPreference.edit();
+        editor.putBoolean("add",add);
         editor.apply();
     }
 

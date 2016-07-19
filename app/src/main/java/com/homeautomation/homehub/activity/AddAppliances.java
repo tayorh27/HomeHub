@@ -27,6 +27,7 @@ import com.homeautomation.homehub.Adapter.AddAppliancesAdapter;
 import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.callbacks.OnClickListener;
+import com.homeautomation.homehub.databases.UserLocalDatabase;
 import com.homeautomation.homehub.information.Appliance;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
     String getTag = "";
     RelativeLayout relativeLayout;
     LinearLayout linearLayout;
+    UserLocalDatabase userLocalDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
         setContentView(R.layout.activity_add_appliances);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        userLocalDatabase = new UserLocalDatabase(AddAppliances.this);
 
         adapter = new AddAppliancesAdapter(AddAppliances.this,this);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -84,8 +88,9 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_send:
-                //MyApplication.getWritableDatabase().insertMyPost(current,false);
-                if(current.size() > 0) {
+                ArrayList<Appliance> getArray = MyApplication.getWritableDatabase().getAllMyPosts();
+                if(getArray.size() > 0) {
+                    userLocalDatabase.setAppliancesAdded(true);
                     startActivity(new Intent(AddAppliances.this, BluetoothConnect.class));
                 }else {
                     Snackbar.make(relativeLayout,"please add at least one appliance",Snackbar.LENGTH_LONG).show();
@@ -109,6 +114,14 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
         }catch (Exception e){
             e.printStackTrace();
             Log.e("selectedImage",e.toString());
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(userLocalDatabase.getAppliancesAdded()){
+            startActivity(new Intent(AddAppliances.this, BluetoothConnect.class));
         }
     }
 

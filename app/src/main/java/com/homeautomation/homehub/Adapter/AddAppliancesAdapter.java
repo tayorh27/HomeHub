@@ -51,7 +51,7 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
         if(current.color.length() > 0) {
             holder.tv.setText(current.name + " - "+current.color);
             int bg = General.getColor(current.color);
-            holder.view.setBackgroundColor(bg);
+            holder.view.setBackgroundColor(context.getResources().getColor(bg));
         }
     }
 
