@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.information.Appliance;
+import com.homeautomation.homehub.utility.General;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,11 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
     @Override
     public void onBindViewHolder(AppliancesAdapter holder, int position) {
         Appliance current = appliances.get(position);
-        holder.tv.setText(current.name);
+        if(current.color.length() > 0) {
+            holder.tv.setText(current.name + " - "+current.color);
+            int bg = General.getColor(current.color);
+            holder.view.setBackgroundColor(bg);
+        }
     }
 
     @Override
@@ -52,9 +57,11 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
     public class AppliancesAdapter extends RecyclerView.ViewHolder {
 
         TextView tv;
+        View view;
         public AppliancesAdapter(View itemView) {
             super(itemView);
             tv = (TextView)itemView.findViewById(R.id.textView);
+            view = (View)itemView.findViewById(R.id.app_color);
         }
     }
 }

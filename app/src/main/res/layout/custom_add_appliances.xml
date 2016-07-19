@@ -41,6 +41,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color1"
                         android:background="@color/red" />
 
                     <ImageButton
@@ -50,6 +52,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color2"
                         android:background="@color/pink"/>
 
                     <ImageButton
@@ -59,6 +63,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color3"
                         android:background="@color/purple"/>
 
                     <ImageButton
@@ -68,6 +74,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color4"
                         android:background="@color/teal"/>
                     <ImageButton
                         android:id="@+id/avatar11"
@@ -76,6 +84,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color5"
                         android:background="@color/green"/>
 
                 </TableRow>
@@ -89,6 +99,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color6"
                         android:background="@color/deep_purple"/>
                     <ImageButton
                         android:id="@+id/avatar9"
@@ -97,6 +109,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color7"
                         android:background="@color/indigo"/>
 
                     <ImageButton
@@ -106,6 +120,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color8"
                         android:background="@color/blue"/>
 
                     <ImageButton
@@ -115,6 +131,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color9"
                         android:background="@color/light_blue" />
 
                     <ImageButton
@@ -124,6 +142,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color10"
                         android:background="@color/cyan" />
                 </TableRow>
 
@@ -136,6 +156,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color11"
                         android:background="@color/light_green"/>
                     <ImageButton
                         android:id="@+id/avatar14"
@@ -144,6 +166,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color12"
                         android:background="@color/lime"/>
 
                     <ImageButton
@@ -153,6 +177,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color13"
                         android:background="@color/yellow"/>
 
                     <ImageButton
@@ -162,6 +188,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color14"
                         android:background="@color/amber" />
 
                     <ImageButton
@@ -171,6 +199,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color15"
                         android:background="@color/orange" />
                 </TableRow>
 
@@ -183,6 +213,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color16"
                         android:background="@color/deep_orange"/>
                     <ImageButton
                         android:id="@+id/avatar19"
@@ -191,6 +223,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color17"
                         android:background="@color/brown"/>
 
                     <ImageButton
@@ -200,6 +234,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color18"
                         android:background="@color/grey"/>
 
                     <ImageButton
@@ -209,6 +245,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color19"
                         android:background="@color/blue_grey" />
 
                     <ImageButton
@@ -218,6 +256,8 @@
                         android:layout_height="32dp"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
+                        android:onClick="SelectColor"
+                        android:tag="color20"
                         android:background="@color/black" />
                 </TableRow>
 

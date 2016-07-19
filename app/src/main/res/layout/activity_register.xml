@@ -25,61 +25,131 @@
 
                 <TableRow>
 
-                    <ImageButton
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar1"
-                        style="@style/Widget.AppCompat.ImageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="agent_01"
+                        android:src="@drawable/agent_01"
                         android:layout_weight="1"/>
 
-                    <ImageButton
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar3"
-                        style="@style/Widget.AppCompat.ImageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="agent_01_01"
+                        android:src="@drawable/agent_01_01"
                         android:layout_weight="1"/>
 
-                    <ImageButton
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar2"
-                        style="@style/Widget.AppCompat.ImageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="anonymous2_girl_material"
+                        android:src="@drawable/anonymous2_girl_material"
+                        android:layout_weight="1"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar7"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="anonymous_material_01"
+                        android:src="@drawable/anonymous_material_01"
                         android:layout_weight="1"/>
                 </TableRow>
 
                 <TableRow>
 
-                    <ImageButton
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar4"
-                        style="@style/Widget.AppCompat.ImageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="bride_hispanic_material_01"
+                        android:src="@drawable/bride_hispanic_material_01"
                         android:layout_weight="1"/>
 
-                    <ImageButton
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar5"
-                        style="@style/Widget.AppCompat.ImageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="cook_woman_fast_food_redhead_material_01"
+                        android:src="@drawable/cook_woman_fast_food_redhead_material_01"
+                        android:layout_weight="1"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar6"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="cool_man_material_01"
+                        android:src="@drawable/cool_man_material_01"
+                        android:layout_weight="1"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar8"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="engineering2_material_01"
+                        android:src="@drawable/engineering2_material_01"
+                        android:layout_weight="1"/>
+                </TableRow>
+
+                <TableRow>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar9"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="engineering_woman_blonde_material_01"
+                        android:src="@drawable/engineering_woman_blonde_material_01"
+                        android:layout_weight="1"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar10"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:tag="football_soccer_man_material_01"
+                        android:src="@drawable/football_soccer_man_material_01"
+                        android:layout_weight="1"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/avatar11"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:onClick="SelectedImage"
+                        android:tag="man_material_01"
+                        android:src="@drawable/man_material_01"
                         android:layout_margin="10dp"
                         android:layout_weight="1"/>
 
                     <ImageButton
-                        android:id="@+id/avatar6"
-                        style="@style/Widget.AppCompat.ImageButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_launcher"
+                        android:id="@+id/avatar12"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
                         android:layout_margin="10dp"
+                        android:onClick="SelectedImage"
+                        android:background="#fff"
+                        android:tag="browsed_image"
+                        android:src="@drawable/ic_photo_camera_black_48px"
                         android:layout_weight="1"/>
                 </TableRow>
 
@@ -91,6 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:singleLine="true"
                 android:hint="Enter a nickname" />
 
             <Button

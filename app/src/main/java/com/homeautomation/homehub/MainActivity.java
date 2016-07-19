@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Appliance> c = new ArrayList<>();
         Appliance appliance = new Appliance("none","");
         c.add(appliance);
-        //MyApplication.getWritableDatabase().insertMyPost(c,false);
+        MyApplication.getWritableDatabase().insertMyPost(c,false);
 
         Thread thread = new Thread(){
             @Override

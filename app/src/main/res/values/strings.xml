@@ -2,4 +2,5 @@
     <string name="app_name">HomeHub</string>
     <string name="title_activity_add_appliances">Add Appliances</string>
     <string name="send">Send</string>
+    <string name="Reg">Register</string>
 </resources>
