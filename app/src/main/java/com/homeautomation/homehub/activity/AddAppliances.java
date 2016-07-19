@@ -26,11 +26,12 @@ import android.widget.Toast;
 import com.homeautomation.homehub.Adapter.AddAppliancesAdapter;
 import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
+import com.homeautomation.homehub.callbacks.OnClickListener;
 import com.homeautomation.homehub.information.Appliance;
 
 import java.util.ArrayList;
 
-public class AddAppliances extends AppCompatActivity {
+public class AddAppliances extends AppCompatActivity implements OnClickListener {
 
 
     ArrayList<Appliance> current = new ArrayList<>();
@@ -47,7 +48,7 @@ public class AddAppliances extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        adapter = new AddAppliancesAdapter(AddAppliances.this);
+        adapter = new AddAppliancesAdapter(AddAppliances.this,this);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(AddAppliances.this));
         recyclerView.setAdapter(adapter);
@@ -146,4 +147,11 @@ public class AddAppliances extends AppCompatActivity {
         dialog.show();
     }
 
+    @Override
+    public void clicked(View view, int position) {
+        ArrayList<Appliance> itemRemove  = MyApplication.getWritableDatabase().getAllMyPosts();
+        int id = itemRemove.get(position).id;
+        MyApplication.getWritableDatabase().deleteDatabase(id);
+        ShowAll();
+    }
 }

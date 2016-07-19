@@ -5,9 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.homeautomation.homehub.R;
+import com.homeautomation.homehub.callbacks.OnClickListener;
 import com.homeautomation.homehub.information.Appliance;
 import com.homeautomation.homehub.utility.General;
 
@@ -21,9 +23,11 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
     Context context;
     ArrayList<Appliance> appliances = new ArrayList<>();
     LayoutInflater inflater;
+    private OnClickListener clickListener;
 
-    public AddAppliancesAdapter(Context context) {
+    public AddAppliancesAdapter(Context context, OnClickListener clickListener) {
         this.context = context;
+        this.clickListener = clickListener;
         inflater = LayoutInflater.from(context);
     }
 
@@ -31,6 +35,8 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
         this.appliances = appliances;
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public AppliancesAdapter onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,11 +63,20 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
     public class AppliancesAdapter extends RecyclerView.ViewHolder {
 
         TextView tv;
-        View view;
+        ImageView view,remove;
         public AppliancesAdapter(View itemView) {
             super(itemView);
             tv = (TextView)itemView.findViewById(R.id.textView);
-            view = (View)itemView.findViewById(R.id.app_color);
+            view = (ImageView)itemView.findViewById(R.id.app_color);
+            remove = (ImageView)itemView.findViewById(R.id.remove);
+            remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(clickListener != null){
+                        clickListener.clicked(view,getPosition());
+                    }
+                }
+            });
         }
     }
 }
