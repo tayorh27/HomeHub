@@ -27,6 +27,7 @@ import android.widget.Toast;
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.databases.UserLocalDatabase;
 import com.homeautomation.homehub.information.User;
+import com.homeautomation.homehub.utility.General;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -49,8 +50,9 @@ public class HomeHub extends AppCompatActivity
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
     //SPP UUID. Look for it
-    static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
     Toolbar toolbar;
+    General general;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +66,16 @@ public class HomeHub extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        imageView = (ImageView)findViewById(R.id.imageView);
-        textView = (TextView)findViewById(R.id.user_nickname);
+        imageView = (ImageView) findViewById(R.id.imageView);
+        textView = (TextView) findViewById(R.id.user_nickname);
 
         userLocalDatabase = new UserLocalDatabase(HomeHub.this);
         user = userLocalDatabase.getStoredUser();
 
         //imageView.setImageResource(getResources().getDrawable(General.getAvatar(user.avatar)));
-       // imageView.setImageDrawable(() BitmapFactory.decodeResource(getResources(),General.getAvatar(user.avatar)));
+        // imageView.setImageDrawable(() BitmapFactory.decodeResource(getResources(),General.getAvatar(user.avatar)));
         //textView.setText(user.nickname);
+        general = new General(HomeHub.this);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -93,9 +96,10 @@ public class HomeHub extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        if(!isBtConnected) {
+        if (!isBtConnected) {
             new ConnectBT().execute(); //Call the class to connect
         }
+        Toast.makeText(HomeHub.this, "name: " + name + " address: " + address, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -124,7 +128,12 @@ public class HomeHub extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_paired) {
-            startActivity(new Intent(HomeHub.this,BluetoothConnect.class));
+            startActivity(new Intent(HomeHub.this, BluetoothConnect.class));
+        }
+        if(id == R.id.action_get_paired){
+            if (!isBtConnected) {
+                new ConnectBT().execute(); //Call the class to connect
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -156,97 +165,82 @@ public class HomeHub extends AppCompatActivity
     }
 
     private void Disconnect() {
-        if (btSocket!=null) //If the btSocket is busy
+        if (btSocket != null) //If the btSocket is busy
         {
-            try
-            {
+            try {
                 btSocket.close(); //close connection
+            } catch (IOException e) {
+                msg("Error");
             }
-            catch (IOException e)
-            { msg("Error");}
         }
         //finish(); //return to the first layout
 
     }
 
-    private void turnOffLed(){
-        if (btSocket!=null)
-        {
-            try
-            {
+    private void turnOffLed() {
+        if (btSocket != null) {
+            try {
                 btSocket.getOutputStream().write("TF".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
         }
     }
 
-    private void turnOnLed(){
-        if (btSocket!=null)
-        {
-            try
-            {
+    private void turnOnLed() {
+        if (btSocket != null) {
+            try {
                 btSocket.getOutputStream().write("TO".toString().getBytes());
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 msg("Error");
             }
         }
     }
 
 
-    private void msg(String s)
-    {
-        Toast.makeText(HomeHub.this,s, Toast.LENGTH_LONG).show();
+    private void msg(String s) {
+        Toast.makeText(HomeHub.this, s, Toast.LENGTH_LONG).show();
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {//UI THREAD
         private boolean ConnectSuccess = true; //if it's here, it's almost connected
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             progress = ProgressDialog.show(HomeHub.this, "Connecting...", "Please wait!!!");  //show a progress dialog
         }
 
         @Override
         protected Void doInBackground(Void... devices) //while the progress dialog is shown, the connection is done in background
         {
-            try
-            {
-                if (btSocket == null || !isBtConnected)
-                {
+            try {
+                //String id = UUID.randomUUID().toString();
+                UUID myUUID = UUID.randomUUID();// UUID.fromString(general.getDeviceID());//"00001101-0000-1000-8000-00805F9B34FB"
+                if (btSocket == null || !isBtConnected) {
                     myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
                     BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
                     btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();//start connection
                 }
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 ConnectSuccess = false;//if the try failed, you can check the exception here
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) //after the doInBackground, it checks if everything went fine
         {
             super.onPostExecute(result);
 
-            if (!ConnectSuccess)
-            {
+            if (!ConnectSuccess) {
                 msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
                 //finish();
-            }
-            else
-            {
+            } else {
                 msg("Connected.");
                 isBtConnected = true;
-                toolbar.setSubtitle("Connected: "+name);
+                toolbar.setSubtitle("Connected: " + name);
             }
             progress.dismiss();
         }

@@ -1,12 +1,21 @@
 package com.homeautomation.homehub.utility;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
+
 import com.homeautomation.homehub.R;
+
+import java.util.UUID;
 
 /**
  * Created by Control & Inst. LAB on 18-Jul-16.
  */
 public class General {
 
+    Context context;
+    public General(Context context){
+        this.context = context;
+    }
     public static int getAvatar(String image) {
         int avatar = 0;
         switch (image){
@@ -164,5 +173,21 @@ public class General {
 //                break;
 //        }
         return color;
+    }
+
+    public String getDeviceID(){
+//        String device="";
+//        device = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//        return device;
+        TelephonyManager teleManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String tmSerial = teleManager.getSimSerialNumber();
+        String tmDeviceId = teleManager.getDeviceId();
+        String androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        if (tmSerial  == null) tmSerial   = "1";
+        if (tmDeviceId== null) tmDeviceId = "1";
+        if (androidId == null) androidId  = "1";
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDeviceId.hashCode() << 32) | tmSerial.hashCode());
+        String uniqueId = deviceUuid.toString();
+        return uniqueId;
     }
 }
