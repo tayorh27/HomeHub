@@ -41,12 +41,12 @@ public class UserLocalDatabase {
     }
 
     public boolean getAppliancesAdded(){
-        return userPreference.getBoolean("logged",false);
+        return userPreference.getBoolean("add",false);
     }
 
     public void setUserExist(boolean add){
         SharedPreferences.Editor editor = userPreference.edit();
-        editor.putBoolean("add",add);
+        editor.putBoolean("logged",add);
         editor.apply();
     }
 

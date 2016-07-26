@@ -1,10 +1,14 @@
 package com.homeautomation.homehub.activity;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +21,10 @@ import android.widget.Toast;
 
 import com.homeautomation.homehub.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 public class BluetoothConnect extends AppCompatActivity {
 
@@ -29,6 +35,10 @@ public class BluetoothConnect extends AppCompatActivity {
     public static String EXTRA_NAME = "device_name";
     ListView listView;
     LinearLayout devices;
+
+    private ProgressDialog progress;
+    BluetoothSocket btSocket = null;
+    private boolean isBtConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +102,7 @@ public class BluetoothConnect extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No Paired Bluetooth Devices Found.", Toast.LENGTH_LONG).show();
         }
 
-        final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, list);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(myListClickListener); //Method called when the device from the list is clicked
 
@@ -107,7 +117,9 @@ public class BluetoothConnect extends AppCompatActivity {
             String address = info.substring(info.length() - 17);
             String name = info.substring(0,info.length() - 17);
 
-            // Make an intent to start next activity.
+            //new ConnectBT(address).execute();
+
+             //Make an intent to start next activity.
             Intent i = new Intent(BluetoothConnect.this, HomeHub.class);
 
             //Change the activity.
@@ -116,4 +128,59 @@ public class BluetoothConnect extends AppCompatActivity {
             startActivity(i);
         }
     };
+
+    private void msg(String s) {
+        Toast.makeText(BluetoothConnect.this, s, Toast.LENGTH_LONG).show();
+    }
+
+    private class ConnectBT extends AsyncTask<Void, Void, Void> {//UI THREAD
+        private boolean ConnectSuccess = true; //if it's here, it's almost connected
+
+        String address;
+        public ConnectBT(String address){
+            this.address = address;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progress = ProgressDialog.show(BluetoothConnect.this, "Connecting...", "Please wait!!!");  //show a progress dialog
+        }
+
+        @Override
+        protected Void doInBackground(Void... devices) //while the progress dialog is shown, the connection is done in background
+        {
+            try {
+                //String id = UUID.randomUUID().toString();;;;1b9a4de0-52be-11e6-bdf4-0800200c9a66
+                UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//"00001101-0000-1000-8000-00805F9B34FB"
+                if (btSocket == null || !isBtConnected) {
+                //Rfcomm d;
+                myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
+                BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
+                btSocket = dispositivo.createRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
+                BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                btSocket.connect();//start connection
+                 }
+            } catch (IOException e) {
+                ConnectSuccess = false;//if the try failed, you can check the exception here
+                Log.e("Bluetooth - Error",e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) //after the doInBackground, it checks if everything went fine
+        {
+            super.onPostExecute(result);
+
+            if (!ConnectSuccess) {
+                msg("Connection Failed. Is it a SPP Bluetooth? Try again.");
+                //finish();
+            } else {
+                msg("Connected.");
+                isBtConnected = true;
+                //toolbar.setSubtitle("Connected: " + name);
+            }
+            progress.dismiss();
+        }
+    }
 }

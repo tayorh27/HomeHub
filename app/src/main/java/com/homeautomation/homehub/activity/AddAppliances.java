@@ -164,7 +164,19 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
     public void clicked(View view, int position) {
         ArrayList<Appliance> itemRemove  = MyApplication.getWritableDatabase().getAllMyPosts();
         int id = itemRemove.get(position).id;
+        final String app_name = itemRemove.get(position).name;
+        final String app_color = itemRemove.get(position).color;
         MyApplication.getWritableDatabase().deleteDatabase(id);
         ShowAll();
+        Snackbar.make(relativeLayout,"Appliance deleted.",Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Appliance> c = new ArrayList<>();
+                Appliance appliance = new Appliance(app_name,app_color);
+                c.add(appliance);
+                MyApplication.getWritableDatabase().insertMyPost(c,false);
+                ShowAll();
+            }
+        }).show();
     }
 }

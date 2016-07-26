@@ -48,9 +48,10 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
     @Override
     public void onBindViewHolder(AppliancesAdapter holder, int position) {
         Appliance current = appliances.get(position);
-        if(current.color.length() > 0) {
-            holder.tv.setText(current.name + " - "+current.color);
+        if(!current.name.contentEquals("none")) {
             int bg = General.getColor(current.color);
+            holder.tv.setText(current.name);
+            holder.tv.setBackgroundColor(context.getResources().getColor(bg));
             holder.view.setBackgroundColor(context.getResources().getColor(bg));
         }
     }

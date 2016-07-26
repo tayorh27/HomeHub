@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.homeautomation.homehub.information.User;
 import com.homeautomation.homehub.utility.General;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
 
 public class HomeHub extends AppCompatActivity
@@ -49,6 +52,8 @@ public class HomeHub extends AppCompatActivity
     BluetoothAdapter myBluetooth = null;
     BluetoothSocket btSocket = null;
     private boolean isBtConnected = false;
+    private OutputStream outputStream;
+    private InputStream inputStream;
     //SPP UUID. Look for it
 
     Toolbar toolbar;
@@ -83,7 +88,12 @@ public class HomeHub extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction("Action", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                turnOnLed();
+                            }
+                        }).show();
             }
         });
 
@@ -214,17 +224,19 @@ public class HomeHub extends AppCompatActivity
         protected Void doInBackground(Void... devices) //while the progress dialog is shown, the connection is done in background
         {
             try {
-                //String id = UUID.randomUUID().toString();
-                UUID myUUID = UUID.randomUUID();// UUID.fromString(general.getDeviceID());//"00001101-0000-1000-8000-00805F9B34FB"
-                if (btSocket == null || !isBtConnected) {
+                //String id = UUID.randomUUID().toString();;;;1b9a4de0-52be-11e6-bdf4-0800200c9a66
+                UUID myUUID = UUID.fromString(general.getDeviceID());//"00001101-0000-1000-8000-00805f9b34fb"
+               if (btSocket == null || !isBtConnected) {
+                //Rfcomm d;
                     myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
                     BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
-                    btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
-                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                    btSocket = dispositivo.createRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
+                    //BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();//start connection
-                }
+               }
             } catch (IOException e) {
                 ConnectSuccess = false;//if the try failed, you can check the exception here
+                Log.e("Bluetooth - Error",e.toString());
             }
             return null;
         }
@@ -240,6 +252,12 @@ public class HomeHub extends AppCompatActivity
             } else {
                 msg("Connected.");
                 isBtConnected = true;
+                try {
+                    outputStream = btSocket.getOutputStream();
+                    inputStream = btSocket.getInputStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 toolbar.setSubtitle("Connected: " + name);
             }
             progress.dismiss();

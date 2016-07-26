@@ -179,15 +179,15 @@ public class General {
 //        String device="";
 //        device = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 //        return device;
-        TelephonyManager teleManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        String tmSerial = teleManager.getSimSerialNumber();
-        String tmDeviceId = teleManager.getDeviceId();
-        String androidId = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-        if (tmSerial  == null) tmSerial   = "1";
-        if (tmDeviceId== null) tmDeviceId = "1";
-        if (androidId == null) androidId  = "1";
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDeviceId.hashCode() << 32) | tmSerial.hashCode());
-        String uniqueId = deviceUuid.toString();
-        return uniqueId;
+        final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
+        return deviceId;
     }
 }

@@ -34,7 +34,7 @@ public class Register extends AppCompatActivity {
         relativeLayout = (RelativeLayout)findViewById(R.id.root);
 
         userLocalDatabase = new UserLocalDatabase(Register.this);
-        OnShow();
+        _OnShow();
     }
 
     public void SelectedImage(View view){
@@ -62,7 +62,7 @@ public class Register extends AppCompatActivity {
         }
     }
 
-    private void OnShow(){
+    private void _OnShow(){
         User user = userLocalDatabase.getStoredUser();
         String nickname = user.nickname;
         editText.setText(nickname);
