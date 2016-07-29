@@ -9,39 +9,47 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.clans.fab.FloatingActionMenu;
+import com.homeautomation.homehub.Adapter.HomeHubAdapter;
+import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
+import com.homeautomation.homehub.callbacks.OnCheckChangeListener;
 import com.homeautomation.homehub.databases.UserLocalDatabase;
+import com.homeautomation.homehub.information.Appliance;
 import com.homeautomation.homehub.information.User;
 import com.homeautomation.homehub.utility.General;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class HomeHub extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnCheckChangeListener {
 
     UserLocalDatabase userLocalDatabase;
     User user;
-    ImageView imageView;
-    TextView textView;
+    ImageView uimageView;
+    TextView utextView;
 
     Button btnOn, btnOff, btnDis;
     SeekBar brightness;
@@ -59,6 +67,13 @@ public class HomeHub extends AppCompatActivity
     Toolbar toolbar;
     General general;
 
+    FloatingActionMenu materialDesignFAM;
+    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+    RecyclerView recyclerView;
+    HomeHubAdapter adapter;
+    ArrayList<Appliance> customData = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,33 +84,21 @@ public class HomeHub extends AppCompatActivity
 
         setContentView(R.layout.activity_home_hub);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        recyclerView = (RecyclerView)findViewById(R.id.appliance_recyclerView);
         setSupportActionBar(toolbar);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
-        textView = (TextView) findViewById(R.id.user_nickname);
+        uimageView = (ImageView) findViewById(R.id.user_image);
+        utextView = (TextView) findViewById(R.id.user_nickname);
 
         userLocalDatabase = new UserLocalDatabase(HomeHub.this);
         user = userLocalDatabase.getStoredUser();
-
-        //imageView.setImageResource(getResources().getDrawable(General.getAvatar(user.avatar)));
-        // imageView.setImageDrawable(() BitmapFactory.decodeResource(getResources(),General.getAvatar(user.avatar)));
-        //textView.setText(user.nickname);
         general = new General(HomeHub.this);
+        adapter = new HomeHubAdapter(HomeHub.this,this);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                turnOnLed();
-                            }
-                        }).show();
-            }
-        });
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.agent_01);//General.getAvatar(user.avatar));
+        ///Drawable d = new BitmapDrawable(bitmap);
+        //uimageView.setBackground(d);
+        //utextView.setText(user.nickname);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -106,10 +109,22 @@ public class HomeHub extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this,2, LinearLayoutManager.VERTICAL,false));
+        recyclerView.setAdapter(adapter);
+
+
+
         if (!isBtConnected) {
             new ConnectBT().execute(); //Call the class to connect
         }
         Toast.makeText(HomeHub.this, "name: " + name + " address: " + address, Toast.LENGTH_SHORT).show();
+        DisplayAll();
+    }
+
+    private void DisplayAll() {
+        customData.clear();
+        customData = MyApplication.getWritableDatabase().getAllMyPosts();
+        adapter.FillAppliance(customData);
     }
 
     @Override
@@ -181,28 +196,34 @@ public class HomeHub extends AppCompatActivity
                 btSocket.close(); //close connection
             } catch (IOException e) {
                 msg("Error");
+            }finally {
+                //DisplayAll();
             }
         }
         //finish(); //return to the first layout
 
     }
 
-    private void turnOffLed() {
+    private void turnOffLed(String code) {
         if (btSocket != null) {
             try {
-                btSocket.getOutputStream().write("TF".toString().getBytes());
+                btSocket.getOutputStream().write(code.getBytes());
             } catch (IOException e) {
                 msg("Error");
+            }finally {
+                //DisplayAll();
             }
         }
     }
 
-    private void turnOnLed() {
+    private void turnOnLed(String code) {
         if (btSocket != null) {
             try {
-                btSocket.getOutputStream().write("TO".toString().getBytes());
+                btSocket.getOutputStream().write(code.getBytes());
             } catch (IOException e) {
                 msg("Error");
+            }finally {
+                //DisplayAll();
             }
         }
     }
@@ -210,6 +231,22 @@ public class HomeHub extends AppCompatActivity
 
     private void msg(String s) {
         Toast.makeText(HomeHub.this, s, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void checkChange(CompoundButton compoundButton, boolean b, int position) {
+        ArrayList<Appliance> getA = MyApplication.getWritableDatabase().getAllMyPosts();
+        Appliance current = getA.get(position);
+        if(b){
+            Toast.makeText(HomeHub.this,String.valueOf(b),Toast.LENGTH_LONG).show();
+            //turnOffLed(current.arduinoCode);
+            MyApplication.getWritableDatabase().updateDatabase(current.id,"status","off");
+        }else {
+            Toast.makeText(HomeHub.this,String.valueOf(b),Toast.LENGTH_LONG).show();
+            //turnOnLed(current.arduinoCode);
+            MyApplication.getWritableDatabase().updateDatabase(current.id,"status","on");
+        }
+        DisplayAll();
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {//UI THREAD
@@ -225,7 +262,7 @@ public class HomeHub extends AppCompatActivity
         {
             try {
                 //String id = UUID.randomUUID().toString();;;;1b9a4de0-52be-11e6-bdf4-0800200c9a66
-                UUID myUUID = UUID.fromString(general.getDeviceID());//"00001101-0000-1000-8000-00805f9b34fb"
+                UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//"00001101-0000-1000-8000-00805f9b34fb"
                if (btSocket == null || !isBtConnected) {
                 //Rfcomm d;
                     myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device

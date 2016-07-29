@@ -50,8 +50,8 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
         Appliance current = appliances.get(position);
         if(!current.name.contentEquals("none")) {
             int bg = General.getColor(current.color);
-            holder.tv.setText(current.name);
-            holder.tv.setBackgroundColor(context.getResources().getColor(bg));
+            holder.tv.setText(current.name +" - "+ current.arduinoCode);
+            holder.tv.setTextColor(context.getResources().getColor(bg));
             holder.view.setBackgroundColor(context.getResources().getColor(bg));
         }
     }

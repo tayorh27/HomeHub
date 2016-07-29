@@ -54,6 +54,16 @@ public class UserLocalDatabase {
         return userPreference.getBoolean("logged",false);
     }
 
+    public void setCounterInput(int counter){
+        SharedPreferences.Editor editor = userPreference.edit();
+        editor.putInt("counter", counter);
+        editor.apply();
+    }
+
+    public int getCounter(){
+        return userPreference.getInt("counter", 1);
+    }
+
     public void clearUser(){
         SharedPreferences.Editor editor = userPreference.edit();
         editor.clear();

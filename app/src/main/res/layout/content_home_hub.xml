@@ -12,4 +12,9 @@
     tools:context="com.homeautomation.homehub.activity.HomeHub"
     tools:showIn="@layout/app_bar_home_hub">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/appliance_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

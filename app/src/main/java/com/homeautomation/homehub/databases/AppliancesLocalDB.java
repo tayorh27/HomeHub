@@ -30,7 +30,7 @@ public class AppliancesLocalDB {
         if (clearPrevious) {
             deleteAll();
         }
-        String sql = "INSERT INTO " + ApplianceHelper.TABLE_NAME_MYPOST + " VALUES(?,?,?);";
+        String sql = "INSERT INTO " + ApplianceHelper.TABLE_NAME_MYPOST + " VALUES(?,?,?,?,?);";
         //compile statement and start a transaction
         SQLiteStatement statement = sqLiteDatabase.compileStatement(sql);
         sqLiteDatabase.beginTransaction();
@@ -41,6 +41,8 @@ public class AppliancesLocalDB {
 
             statement.bindString(2, current.name);
             statement.bindString(3, current.color);
+            statement.bindString(4, current.arduinoCode);
+            statement.bindString(5, current.status);
             statement.execute();
         }
         sqLiteDatabase.setTransactionSuccessful();
@@ -53,7 +55,9 @@ public class AppliancesLocalDB {
         String[] columns = {
                 ApplianceHelper.COLUMN_ID,
                 ApplianceHelper.COLUMN_APP_NAME,
-                ApplianceHelper.COLUMN_COLOR
+                ApplianceHelper.COLUMN_COLOR,
+                ApplianceHelper.COLUMN_ARDUIONOCODE,
+                ApplianceHelper.COLUMN_STATUS
         };
         Cursor cursor = sqLiteDatabase.query(ApplianceHelper.TABLE_NAME_MYPOST, columns, null, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
@@ -62,6 +66,8 @@ public class AppliancesLocalDB {
                 current.id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_ID)));
                 current.name = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_APP_NAME));
                 current.color = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_COLOR));
+                current.arduinoCode = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_ARDUIONOCODE));
+                current.status = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_STATUS));
                 currentData.add(current);
             }
             cursor.close();
@@ -75,7 +81,9 @@ public class AppliancesLocalDB {
         String[] columns = {
                 ApplianceHelper.COLUMN_ID,
                 ApplianceHelper.COLUMN_APP_NAME,
-                ApplianceHelper.COLUMN_COLOR
+                ApplianceHelper.COLUMN_COLOR,
+                ApplianceHelper.COLUMN_ARDUIONOCODE,
+                ApplianceHelper.COLUMN_STATUS
         };
         Cursor cursor = sqLiteDatabase.query(ApplianceHelper.TABLE_NAME_MYPOST, columns, null, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
@@ -91,11 +99,11 @@ public class AppliancesLocalDB {
         sqLiteDatabase.delete(ApplianceHelper.TABLE_NAME_MYPOST, null, null);
     }
 
-    public void updateDatabase(int foreignKey, String newBitmap) {
+    public void updateDatabase(int foreignKey,String what_to_update, String status) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ApplianceHelper.COLUMN_APP_NAME, newBitmap);
+        contentValues.put(what_to_update, status);//ApplianceHelper.COLUMN_STATUS
         sqLiteDatabase.update(ApplianceHelper.TABLE_NAME_MYPOST, contentValues, ApplianceHelper.COLUMN_ID + "=" + foreignKey, null);//
-        Log.e("UPDATE", "database updated to " + newBitmap);
+        Log.e("UPDATE", "database updated to " + status);
     }
 
     public void deleteDatabase(int id) {
@@ -114,6 +122,8 @@ public class AppliancesLocalDB {
 
         public static final String COLUMN_APP_NAME = "applianceName";
         public static final String COLUMN_COLOR = "color";
+        public static final String COLUMN_ARDUIONOCODE = "arduino_code";
+        public static final String COLUMN_STATUS = "status";
 //        public static final String COLUMN_IMAGE = "image";
 //        public static final String COLUMN_MOBILE = "mobile";
 //        public static final String COLUMN_USERNAME = "username";
@@ -124,7 +134,9 @@ public class AppliancesLocalDB {
         private static final String CREATE_TABLE_MYPOST = "CREATE TABLE " + TABLE_NAME_MYPOST + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 COLUMN_APP_NAME + " TEXT," +
-                COLUMN_COLOR + " TEXT" +
+                COLUMN_COLOR + " TEXT," +
+                COLUMN_ARDUIONOCODE + " TEXT," +
+                COLUMN_STATUS + " TEXT" +
                 ");";
 
 

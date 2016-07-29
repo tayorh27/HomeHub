@@ -42,6 +42,8 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
     RelativeLayout relativeLayout;
     LinearLayout linearLayout;
     UserLocalDatabase userLocalDatabase;
+    ArrayList<Appliance> getAll = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +73,8 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
     }
 
     private void ShowAll() {
-        ArrayList<Appliance> getAll = MyApplication.getWritableDatabase().getAllMyPosts();
+        getAll.clear();
+        getAll = MyApplication.getWritableDatabase().getAllMyPosts();
         if(!getAll.isEmpty()){
             linearLayout.setVisibility(View.GONE);
         }
@@ -145,9 +148,12 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
                 if (editText.getText().length() > 0) {
                     String app_name = editText.getText().toString();
                     //int last = MyApplication.getWritableDatabase().getLastId();
-                    Appliance appliance = new Appliance(app_name, getTag);
+                    int counter = userLocalDatabase.getCounter();
+                    Appliance appliance = new Appliance(app_name, getTag,"arduino"+counter,"off");
                     current.add(appliance);
                     MyApplication.getWritableDatabase().insertMyPost(current, false);
+                    counter++;
+                    userLocalDatabase.setCounterInput(counter);
                     ShowAll();
                     dialog.dismiss();
                 } else {
@@ -166,13 +172,15 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
         int id = itemRemove.get(position).id;
         final String app_name = itemRemove.get(position).name;
         final String app_color = itemRemove.get(position).color;
+        final String app_arduino = itemRemove.get(position).arduinoCode;
+        final String status = itemRemove.get(position).status;
         MyApplication.getWritableDatabase().deleteDatabase(id);
         ShowAll();
         Snackbar.make(relativeLayout,"Appliance deleted.",Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayList<Appliance> c = new ArrayList<>();
-                Appliance appliance = new Appliance(app_name,app_color);
+                Appliance appliance = new Appliance(app_name,app_color,app_arduino,status);
                 c.add(appliance);
                 MyApplication.getWritableDatabase().insertMyPost(c,false);
                 ShowAll();
