@@ -11,9 +11,13 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.databases.UserLocalDatabase;
+import com.homeautomation.homehub.information.Appliance;
 import com.homeautomation.homehub.information.User;
+
+import java.util.ArrayList;
 
 public class Register extends AppCompatActivity {
 
@@ -34,6 +38,10 @@ public class Register extends AppCompatActivity {
         relativeLayout = (RelativeLayout)findViewById(R.id.root);
 
         userLocalDatabase = new UserLocalDatabase(Register.this);
+        ArrayList<Appliance> c = new ArrayList<>();
+        Appliance appliance = new Appliance("none", "", "","",false,false,false);
+        c.add(appliance);
+        MyApplication.getWritableDatabase().insertMyPost(c, false);
         _OnShow();
     }
 
@@ -73,6 +81,7 @@ public class Register extends AppCompatActivity {
         super.onStart();
         if(userLocalDatabase.getUserExist()){
             startActivity(new Intent(Register.this, AddAppliances.class));
+            finish();
         }
     }
 }

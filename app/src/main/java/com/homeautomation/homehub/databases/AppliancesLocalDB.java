@@ -30,7 +30,7 @@ public class AppliancesLocalDB {
         if (clearPrevious) {
             deleteAll();
         }
-        String sql = "INSERT INTO " + ApplianceHelper.TABLE_NAME_MYPOST + " VALUES(?,?,?,?,?);";
+        String sql = "INSERT INTO " + ApplianceHelper.TABLE_NAME_MYPOST + " VALUES(?,?,?,?,?,?,?,?);";
         //compile statement and start a transaction
         SQLiteStatement statement = sqLiteDatabase.compileStatement(sql);
         sqLiteDatabase.beginTransaction();
@@ -43,6 +43,9 @@ public class AppliancesLocalDB {
             statement.bindString(3, current.color);
             statement.bindString(4, current.arduinoCode);
             statement.bindString(5, current.status);
+            statement.bindString(6, String.valueOf(current.high));
+            statement.bindString(7, String.valueOf(current.balanced));
+            statement.bindString(8, String.valueOf(current.saver));
             statement.execute();
         }
         sqLiteDatabase.setTransactionSuccessful();
@@ -57,7 +60,10 @@ public class AppliancesLocalDB {
                 ApplianceHelper.COLUMN_APP_NAME,
                 ApplianceHelper.COLUMN_COLOR,
                 ApplianceHelper.COLUMN_ARDUIONOCODE,
-                ApplianceHelper.COLUMN_STATUS
+                ApplianceHelper.COLUMN_STATUS,
+                ApplianceHelper.COLUMN_HIGH,
+                ApplianceHelper.COLUMN_BALANCED,
+                ApplianceHelper.COLUMN_SAVER
         };
         Cursor cursor = sqLiteDatabase.query(ApplianceHelper.TABLE_NAME_MYPOST, columns, null, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
@@ -68,6 +74,9 @@ public class AppliancesLocalDB {
                 current.color = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_COLOR));
                 current.arduinoCode = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_ARDUIONOCODE));
                 current.status = cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_STATUS));
+                current.high = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_HIGH)));
+                current.balanced = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_BALANCED)));
+                current.saver = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex(ApplianceHelper.COLUMN_SAVER)));
                 currentData.add(current);
             }
             cursor.close();
@@ -83,7 +92,10 @@ public class AppliancesLocalDB {
                 ApplianceHelper.COLUMN_APP_NAME,
                 ApplianceHelper.COLUMN_COLOR,
                 ApplianceHelper.COLUMN_ARDUIONOCODE,
-                ApplianceHelper.COLUMN_STATUS
+                ApplianceHelper.COLUMN_STATUS,
+                ApplianceHelper.COLUMN_HIGH,
+                ApplianceHelper.COLUMN_BALANCED,
+                ApplianceHelper.COLUMN_SAVER
         };
         Cursor cursor = sqLiteDatabase.query(ApplianceHelper.TABLE_NAME_MYPOST, columns, null, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
@@ -124,6 +136,9 @@ public class AppliancesLocalDB {
         public static final String COLUMN_COLOR = "color";
         public static final String COLUMN_ARDUIONOCODE = "arduino_code";
         public static final String COLUMN_STATUS = "status";
+        public static final String COLUMN_HIGH = "high";
+        public static final String COLUMN_BALANCED = "balanced";
+        public static final String COLUMN_SAVER = "saver";
 //        public static final String COLUMN_IMAGE = "image";
 //        public static final String COLUMN_MOBILE = "mobile";
 //        public static final String COLUMN_USERNAME = "username";
@@ -136,7 +151,10 @@ public class AppliancesLocalDB {
                 COLUMN_APP_NAME + " TEXT," +
                 COLUMN_COLOR + " TEXT," +
                 COLUMN_ARDUIONOCODE + " TEXT," +
-                COLUMN_STATUS + " TEXT" +
+                COLUMN_STATUS + " TEXT," +
+                COLUMN_HIGH + " TEXT," +
+                COLUMN_BALANCED + " TEXT," +
+                COLUMN_SAVER + " TEXT" +
                 ");";
 
 

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -48,13 +49,14 @@ public class HomeHubAdapter extends RecyclerView.Adapter<HomeHubAdapter.HubAdapt
     @Override
     public void onBindViewHolder(HubAdapter holder, int position) {
         Appliance current = appliances.get(position);
-        if(!current.name.contentEquals("none")) {
+        if(!current.name.contentEquals("none") && !current.arduinoCode.contentEquals("")) {
             int bg = General.getColor(current.color);
             holder.tv.setText(current.name +" - "+ current.status);
-            holder.tv.setTextColor(context.getResources().getColor(bg));
+            //holder.tv.setTextColor(context.getResources().getColor(bg));
             holder.aSwitch.setChecked(getStatus(current.status));
             holder.aSwitch.setText(getConnection(current.status));
-            holder.aSwitch.setTextColor(context.getResources().getColor(bg));
+            //holder.aSwitch.setTextColor(context.getResources().getColor(bg));
+            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(bg));
         }
     }
 
@@ -84,12 +86,14 @@ public class HomeHubAdapter extends RecyclerView.Adapter<HomeHubAdapter.HubAdapt
         ImageView iv;
         TextView tv;
         Switch aSwitch;
+        RelativeLayout relativeLayout;
 
         public HubAdapter(View itemView) {
             super(itemView);
             tv = (TextView)itemView.findViewById(R.id.a_name_connected);
             iv = (ImageView)itemView.findViewById(R.id.a_image);
             aSwitch = (Switch)itemView.findViewById(R.id.a_switch1);
+            relativeLayout = (RelativeLayout)itemView.findViewById(R.id.hub_layout);
             aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

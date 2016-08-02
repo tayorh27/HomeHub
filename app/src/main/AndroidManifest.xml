@@ -35,12 +35,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.homeautomation.homehub.activity.Register" />
         </activity>
-        <activity android:name=".activity.BluetoothConnect"
-            android:label="@string/p_devices"/>
+        <activity
+            android:name=".activity.BluetoothConnect"
+            android:label="@string/p_devices" />
         <activity
             android:name=".activity.HomeHub"
             android:label="@string/title_activity_home_hub"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:label="@string/action_settings" />
+        <activity android:name=".activity.HubSettings.HighPerformanceActivity"
+            android:label="@string/highperformance"/>
+        <activity android:name=".activity.HubSettings.BalancedActivity"
+            android:label="@string/balanced" />
+        <activity android:name=".activity.HubSettings.PowerSaverActivity"
+            android:label="@string/powersaver" />
     </application>
 
 </manifest>

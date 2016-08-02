@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.ParcelUuid;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -84,7 +85,7 @@ public class HomeHub extends AppCompatActivity
 
         setContentView(R.layout.activity_home_hub);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        recyclerView = (RecyclerView)findViewById(R.id.appliance_recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.appliance_recyclerView);
         setSupportActionBar(toolbar);
 
         uimageView = (ImageView) findViewById(R.id.user_image);
@@ -93,7 +94,7 @@ public class HomeHub extends AppCompatActivity
         userLocalDatabase = new UserLocalDatabase(HomeHub.this);
         user = userLocalDatabase.getStoredUser();
         general = new General(HomeHub.this);
-        adapter = new HomeHubAdapter(HomeHub.this,this);
+        adapter = new HomeHubAdapter(HomeHub.this, this);
 
         //Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.agent_01);//General.getAvatar(user.avatar));
         ///Drawable d = new BitmapDrawable(bitmap);
@@ -109,22 +110,25 @@ public class HomeHub extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this,2, LinearLayoutManager.VERTICAL,false));
+        recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this, 2, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
-
 
 
         if (!isBtConnected) {
             new ConnectBT().execute(); //Call the class to connect
         }
-        Toast.makeText(HomeHub.this, "name: " + name + " address: " + address, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(HomeHub.this, "name: " + name + " address: " + address, Toast.LENGTH_SHORT).show();
         DisplayAll();
     }
 
     private void DisplayAll() {
-        customData.clear();
-        customData = MyApplication.getWritableDatabase().getAllMyPosts();
-        adapter.FillAppliance(customData);
+        try {
+            //customData.clear();
+            customData = MyApplication.getWritableDatabase().getAllMyPosts();
+            adapter.FillAppliance(customData);
+        } catch (Exception e) {
+            Log.e("Display error", e.toString());
+        }
     }
 
     @Override
@@ -155,7 +159,7 @@ public class HomeHub extends AppCompatActivity
         if (id == R.id.action_paired) {
             startActivity(new Intent(HomeHub.this, BluetoothConnect.class));
         }
-        if(id == R.id.action_get_paired){
+        if (id == R.id.action_get_paired) {
             if (!isBtConnected) {
                 new ConnectBT().execute(); //Call the class to connect
             }
@@ -180,8 +184,8 @@ public class HomeHub extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(HomeHub.this, SettingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -196,7 +200,7 @@ public class HomeHub extends AppCompatActivity
                 btSocket.close(); //close connection
             } catch (IOException e) {
                 msg("Error");
-            }finally {
+            } finally {
                 //DisplayAll();
             }
         }
@@ -210,7 +214,7 @@ public class HomeHub extends AppCompatActivity
                 btSocket.getOutputStream().write(code.getBytes());
             } catch (IOException e) {
                 msg("Error");
-            }finally {
+            } finally {
                 //DisplayAll();
             }
         }
@@ -222,10 +226,37 @@ public class HomeHub extends AppCompatActivity
                 btSocket.getOutputStream().write(code.getBytes());
             } catch (IOException e) {
                 msg("Error");
-            }finally {
+            } finally {
                 //DisplayAll();
             }
         }
+    }
+
+    private void ReadData(){
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    final String string;
+                    int byteCount = inputStream.available();
+                    if (byteCount > 0) {
+                        byte[] rawBytes = new byte[byteCount];
+                        inputStream.read(rawBytes);
+                        string = new String(rawBytes, "UTF-8");
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //return string
+                        }
+                    });
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
     }
 
 
@@ -237,16 +268,18 @@ public class HomeHub extends AppCompatActivity
     public void checkChange(CompoundButton compoundButton, boolean b, int position) {
         ArrayList<Appliance> getA = MyApplication.getWritableDatabase().getAllMyPosts();
         Appliance current = getA.get(position);
-        if(b){
-            Toast.makeText(HomeHub.this,String.valueOf(b),Toast.LENGTH_LONG).show();
+        if (b) {
+            Toast.makeText(HomeHub.this, String.valueOf(b), Toast.LENGTH_LONG).show();
             //turnOffLed(current.arduinoCode);
-            MyApplication.getWritableDatabase().updateDatabase(current.id,"status","off");
-        }else {
-            Toast.makeText(HomeHub.this,String.valueOf(b),Toast.LENGTH_LONG).show();
+            MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");
+            //DisplayAll();
+        } else {
+            Toast.makeText(HomeHub.this, String.valueOf(b), Toast.LENGTH_LONG).show();
             //turnOnLed(current.arduinoCode);
-            MyApplication.getWritableDatabase().updateDatabase(current.id,"status","on");
+            MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "on");
+            //DisplayAll();
         }
-        DisplayAll();
+        //
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {//UI THREAD
@@ -263,17 +296,18 @@ public class HomeHub extends AppCompatActivity
             try {
                 //String id = UUID.randomUUID().toString();;;;1b9a4de0-52be-11e6-bdf4-0800200c9a66
                 UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");//"00001101-0000-1000-8000-00805f9b34fb"
-               if (btSocket == null || !isBtConnected) {
-                //Rfcomm d;
+                if (btSocket == null || !isBtConnected) {
+                    //Rfcomm d;
                     myBluetooth = BluetoothAdapter.getDefaultAdapter();//get the mobile bluetooth device
                     BluetoothDevice dispositivo = myBluetooth.getRemoteDevice(address);//connects to the device's address and checks if it's available
-                    btSocket = dispositivo.createRfcommSocketToServiceRecord(myUUID);//create a RFCOMM (SPP) connection
-                    //BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
+                    ParcelUuid[] uuids = dispositivo.getUuids();
+                    btSocket = dispositivo.createRfcommSocketToServiceRecord(uuids[0].getUuid());//create a RFCOMM (SPP) connection
+                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                     btSocket.connect();//start connection
-               }
+                }
             } catch (IOException e) {
                 ConnectSuccess = false;//if the try failed, you can check the exception here
-                Log.e("Bluetooth - Error",e.toString());
+                Log.e("Bluetooth - Error", e.toString());
             }
             return null;
         }
@@ -296,6 +330,7 @@ public class HomeHub extends AppCompatActivity
                     e.printStackTrace();
                 }
                 toolbar.setSubtitle("Connected: " + name);
+                //enable relativeLayout
             }
             progress.dismiss();
         }

@@ -34,8 +34,6 @@ import java.util.ArrayList;
 
 public class AddAppliances extends AppCompatActivity implements OnClickListener {
 
-
-    ArrayList<Appliance> current = new ArrayList<>();
     AddAppliancesAdapter adapter;
     RecyclerView recyclerView;
     String getTag = "";
@@ -73,7 +71,7 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
     }
 
     private void ShowAll() {
-        getAll.clear();
+        //getAll.clear();
         getAll = MyApplication.getWritableDatabase().getAllMyPosts();
         if(!getAll.isEmpty()){
             linearLayout.setVisibility(View.GONE);
@@ -95,6 +93,7 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
                 if(getArray.size() > 0) {
                     userLocalDatabase.setAppliancesAdded(true);
                     startActivity(new Intent(AddAppliances.this, BluetoothConnect.class));
+                    finish();
                 }else {
                     Snackbar.make(relativeLayout,"please add at least one appliance",Snackbar.LENGTH_LONG).show();
                 }
@@ -149,7 +148,8 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
                     String app_name = editText.getText().toString();
                     //int last = MyApplication.getWritableDatabase().getLastId();
                     int counter = userLocalDatabase.getCounter();
-                    Appliance appliance = new Appliance(app_name, getTag,"arduino"+counter,"off");
+                    ArrayList<Appliance> current = new ArrayList<>();
+                    Appliance appliance = new Appliance(app_name, getTag,"arduino"+counter,"off",false,false,false);
                     current.add(appliance);
                     MyApplication.getWritableDatabase().insertMyPost(current, false);
                     counter++;
@@ -174,13 +174,16 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
         final String app_color = itemRemove.get(position).color;
         final String app_arduino = itemRemove.get(position).arduinoCode;
         final String status = itemRemove.get(position).status;
+        final boolean high = itemRemove.get(position).high;
+        final boolean balanced = itemRemove.get(position).balanced;
+        final boolean saver = itemRemove.get(position).saver;
         MyApplication.getWritableDatabase().deleteDatabase(id);
         ShowAll();
         Snackbar.make(relativeLayout,"Appliance deleted.",Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayList<Appliance> c = new ArrayList<>();
-                Appliance appliance = new Appliance(app_name,app_color,app_arduino,status);
+                Appliance appliance = new Appliance(app_name,app_color,app_arduino,status,high,balanced,saver);
                 c.add(appliance);
                 MyApplication.getWritableDatabase().insertMyPost(c,false);
                 ShowAll();

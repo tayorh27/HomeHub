@@ -12,4 +12,14 @@
     <string name="action_settings">Settings</string>
     <string name="action_paired">Paired Devices</string>
     <string name="p_devices">Paired Devices</string>
+    <string name="highperformance">High Performance</string>
+    <string name="balanced">Balanced</string>
+    <string name="powersaver">Power Saver</string>
+    <string name="info">info</string>
+
+    <string-array name="hub_settings">
+        <item>High Performance</item>
+        <item>Balanced</item>
+        <item>Power Saver</item>
+    </string-array>
 </resources>

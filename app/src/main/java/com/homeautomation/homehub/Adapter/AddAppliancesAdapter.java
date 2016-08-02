@@ -48,7 +48,7 @@ public class AddAppliancesAdapter extends RecyclerView.Adapter<AddAppliancesAdap
     @Override
     public void onBindViewHolder(AppliancesAdapter holder, int position) {
         Appliance current = appliances.get(position);
-        if(!current.name.contentEquals("none")) {
+        if(!current.name.contentEquals("none") && !current.arduinoCode.contentEquals("")) {
             int bg = General.getColor(current.color);
             holder.tv.setText(current.name +" - "+ current.arduinoCode);
             holder.tv.setTextColor(context.getResources().getColor(bg));
