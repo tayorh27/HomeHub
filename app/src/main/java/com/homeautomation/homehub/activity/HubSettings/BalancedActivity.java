@@ -8,13 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import com.homeautomation.homehub.Adapter.HubSettings.HubSettingsAdapter;
 import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.callbacks.SettingsCheckListener;
+import com.homeautomation.homehub.databases.ModeApplianceDatabase;
 import com.homeautomation.homehub.information.Appliance;
 
 import java.util.ArrayList;
@@ -24,7 +23,8 @@ public class BalancedActivity extends AppCompatActivity implements SettingsCheck
     RecyclerView recyclerView;
     HubSettingsAdapter adapter;
     ArrayList<Appliance> customData = new ArrayList<>();
-    boolean balanced;
+    String balanced;
+    ModeApplianceDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,8 @@ public class BalancedActivity extends AppCompatActivity implements SettingsCheck
         recyclerView.setAdapter(adapter);
         customData = MyApplication.getWritableDatabase().getAllMyPosts();
         adapter.FillRecyclerView(customData);
+        database = new ModeApplianceDatabase(BalancedActivity.this);
+        balanced = database.getBalanced();
     }
 
     @Override
@@ -64,20 +66,15 @@ public class BalancedActivity extends AppCompatActivity implements SettingsCheck
     }
 
     @Override
-    public void onSettingsCheckListener(CompoundButton compoundButton, boolean checked, int position) {
+    public void onSettingsRelativeCheckListener(CheckBox checkBox, boolean checked, int position) {
         Appliance current = customData.get(position);
-        if(compoundButton.isChecked()){
-            compoundButton.setChecked(false);
+        if(checkBox.isChecked()){
+            checkBox.setChecked(false);
             MyApplication.getWritableDatabase().updateDatabase(current.id,"balanced", "false");
         }else {
-            compoundButton.setChecked(true);
+            checkBox.setChecked(true);
             MyApplication.getWritableDatabase().updateDatabase(current.id,"balanced", "true");
         }
-        Toast.makeText(BalancedActivity.this,current.name+" is checked "+checked,Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onSettingsRelativeCheckListener(CheckBox checkBox, boolean checked, int position) {
-
+        //Toast.makeText(BalancedActivity.this,current.name+" is checked to "+checkBox.isChecked(),Toast.LENGTH_LONG).show();
     }
 }

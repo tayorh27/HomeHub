@@ -16,6 +16,9 @@
     <string name="balanced">Balanced</string>
     <string name="powersaver">Power Saver</string>
     <string name="info">info</string>
+    <string name="action_gridList">Grid | List</string>
+    <string name="action_grid">Grid</string>
+    <string name="action_list">List</string>
 
     <string-array name="hub_settings">
         <item>High Performance</item>

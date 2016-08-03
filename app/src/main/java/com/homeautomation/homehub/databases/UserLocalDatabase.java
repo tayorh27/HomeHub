@@ -64,6 +64,16 @@ public class UserLocalDatabase {
         return userPreference.getInt("counter", 1);
     }
 
+    public void setLayoutInput(String layout){
+        SharedPreferences.Editor editor = userPreference.edit();
+        editor.putString("layout", layout);
+        editor.apply();
+    }
+
+    public String getLayout_(){
+        return userPreference.getString("layout", "grid");
+    }
+
     public void clearUser(){
         SharedPreferences.Editor editor = userPreference.edit();
         editor.clear();

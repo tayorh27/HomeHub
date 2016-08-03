@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,9 +49,13 @@ public class HubSettingsAdapter extends RecyclerView.Adapter<HubSettingsAdapter.
     public void onBindViewHolder(SettingsAdapter holder, int position) {
         Appliance current = data.get(position);
         if (!current.name.contentEquals("none") && !current.arduinoCode.contentEquals("")) {
-            holder.tv.setText(current.name + " - " + current.arduinoCode);
+            holder.tv.setText(current.name);
             if(page.contentEquals("high")){
-
+                if(current.high){
+                    holder.cb.setChecked(true);
+                }else {
+                    holder.cb.setChecked(false);
+                }
             }else if(page.contentEquals("balanced")){
                 if(current.balanced){
                     holder.cb.setChecked(true);
@@ -60,7 +63,11 @@ public class HubSettingsAdapter extends RecyclerView.Adapter<HubSettingsAdapter.
                     holder.cb.setChecked(false);
                 }
             }else if(page.contentEquals("saver")){
-
+                if(current.saver){
+                    holder.cb.setChecked(true);
+                }else {
+                    holder.cb.setChecked(false);
+                }
             }
             //holder.view.setBackgroundColor(context.getResources().getColor(bg));
         }
@@ -89,15 +96,6 @@ public class HubSettingsAdapter extends RecyclerView.Adapter<HubSettingsAdapter.
                 public void onClick(View view) {
                     if (checkListener != null) {
                         checkListener.onSettingsRelativeCheckListener(cb, cb.isChecked(), getPosition());
-                    }
-                }
-            });
-
-            cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    if (checkListener != null) {
-                        checkListener.onSettingsCheckListener(compoundButton, b, getPosition());
                     }
                 }
             });

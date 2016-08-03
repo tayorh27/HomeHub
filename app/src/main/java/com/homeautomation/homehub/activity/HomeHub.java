@@ -22,9 +22,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +73,7 @@ public class HomeHub extends AppCompatActivity
     RecyclerView recyclerView;
     HomeHubAdapter adapter;
     ArrayList<Appliance> customData = new ArrayList<>();
+    Menu myMenu = null;
 
 
     @Override
@@ -110,7 +111,8 @@ public class HomeHub extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this, 2, LinearLayoutManager.VERTICAL, false));
+        setLayout();
+        //recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this, 2, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
 
@@ -145,7 +147,24 @@ public class HomeHub extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home_hub, menu);
+        myMenu = menu;
         return true;
+    }
+
+    private void setLayout(){
+        String title = userLocalDatabase.getLayout_();
+        //MenuItem menuItem = myMenu.findItem(R.id.action_gridList);
+        if (title.contentEquals(getResources().getString(R.string.action_grid))) {
+            //Toast.makeText(HomeHub.this, "grid", Toast.LENGTH_SHORT).show();
+            recyclerView.setLayoutManager(new LinearLayoutManager(HomeHub.this));
+            //menuItem.setTitle(getResources().getString(R.string.action_list));
+            //menuItem.setIcon(R.drawable.ic_view_quilt_white_24px);
+        } else {
+            //Toast.makeText(HomeHub.this, "list", Toast.LENGTH_SHORT).show();
+            recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this, 2, LinearLayoutManager.VERTICAL, false));
+            //menuItem.setTitle(getResources().getString(R.string.action_grid));
+            //menuItem.setIcon(R.drawable.ic_view_list_white_24px);
+        }
     }
 
     @Override
@@ -156,6 +175,28 @@ public class HomeHub extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_gridList) {
+            MenuItem menuItem = myMenu.findItem(R.id.action_gridList);
+            String title = menuItem.getTitle().toString();
+            if (title.contentEquals(getResources().getString(R.string.action_grid))) {
+                //Toast.makeText(HomeHub.this, "grid", Toast.LENGTH_SHORT).show();
+                recyclerView.setLayoutManager(new LinearLayoutManager(HomeHub.this));
+                menuItem.setTitle(getResources().getString(R.string.action_list));
+                menuItem.setIcon(R.drawable.ic_view_quilt_white_24px);
+                userLocalDatabase.setLayoutInput("List");
+            } else {
+                //Toast.makeText(HomeHub.this, "list", Toast.LENGTH_SHORT).show();
+                recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this, 2, LinearLayoutManager.VERTICAL, false));
+                menuItem.setTitle(getResources().getString(R.string.action_grid));
+                menuItem.setIcon(R.drawable.ic_view_list_white_24px);
+                userLocalDatabase.setLayoutInput("Grid");
+            }
+//            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.ic_view_quilt_white_24px);
+//            Drawable getIcon1 = new BitmapDrawable(b);
+//            Bitmap b2 = BitmapFactory.decodeResource(getResources(), R.drawable.ic_view_list_white_24px);
+//            Drawable getIcon2 = new BitmapDrawable(b2);
+            DisplayAll();
+        }
         if (id == R.id.action_paired) {
             startActivity(new Intent(HomeHub.this, BluetoothConnect.class));
         }
@@ -232,8 +273,8 @@ public class HomeHub extends AppCompatActivity
         }
     }
 
-    private void ReadData(){
-        Thread thread = new Thread(){
+    private void ReadData() {
+        Thread thread = new Thread() {
             @Override
             public void run() {
                 super.run();
@@ -251,7 +292,7 @@ public class HomeHub extends AppCompatActivity
                             //return string
                         }
                     });
-                }catch (IOException e){
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -265,21 +306,20 @@ public class HomeHub extends AppCompatActivity
     }
 
     @Override
-    public void checkChange(CompoundButton compoundButton, boolean b, int position) {
-        ArrayList<Appliance> getA = MyApplication.getWritableDatabase().getAllMyPosts();
-        Appliance current = getA.get(position);
-        if (b) {
-            Toast.makeText(HomeHub.this, String.valueOf(b), Toast.LENGTH_LONG).show();
+    public void checkChange(Switch _switch, boolean b, int position) {
+        Appliance current = customData.get(position);
+        if (!_switch.isChecked()) {
+            //Toast.makeText(HomeHub.this, String.valueOf(_switch.isChecked()), Toast.LENGTH_LONG).show();
             //turnOffLed(current.arduinoCode);
-            MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");
+            MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");//update in turnon method
             //DisplayAll();
         } else {
-            Toast.makeText(HomeHub.this, String.valueOf(b), Toast.LENGTH_LONG).show();
+            //Toast.makeText(HomeHub.this, String.valueOf(_switch.isChecked()), Toast.LENGTH_LONG).show();
             //turnOnLed(current.arduinoCode);
             MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "on");
             //DisplayAll();
         }
-        //
+        DisplayAll();
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {//UI THREAD
@@ -329,7 +369,7 @@ public class HomeHub extends AppCompatActivity
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                toolbar.setSubtitle("Connected: " + name);
+                toolbar.setSubtitle("Connected to: " + name);
                 //enable relativeLayout
             }
             progress.dismiss();

@@ -8,12 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.homeautomation.homehub.Adapter.HubSettings.HubSettingsAdapter;
 import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.callbacks.SettingsCheckListener;
+import com.homeautomation.homehub.databases.ModeApplianceDatabase;
 import com.homeautomation.homehub.information.Appliance;
 
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ public class PowerSaverActivity extends AppCompatActivity implements SettingsChe
     RecyclerView recyclerView;
     HubSettingsAdapter adapter;
     ArrayList<Appliance> customData;
+    String saver;
+    ModeApplianceDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +37,8 @@ public class PowerSaverActivity extends AppCompatActivity implements SettingsChe
         recyclerView.setAdapter(adapter);
         customData = MyApplication.getWritableDatabase().getAllMyPosts();
         adapter.FillRecyclerView(customData);
+        database = new ModeApplianceDatabase(PowerSaverActivity.this);
+        saver = database.getSaver();
     }
 
     @Override
@@ -62,12 +66,14 @@ public class PowerSaverActivity extends AppCompatActivity implements SettingsChe
     }
 
     @Override
-    public void onSettingsCheckListener(CompoundButton compoundButton, boolean checked, int position) {
-
-    }
-
-    @Override
     public void onSettingsRelativeCheckListener(CheckBox checkBox, boolean checked, int position) {
-
+        Appliance current = customData.get(position);
+        if(checkBox.isChecked()){
+            checkBox.setChecked(false);
+            MyApplication.getWritableDatabase().updateDatabase(current.id,"saver", "false");
+        }else {
+            checkBox.setChecked(true);
+            MyApplication.getWritableDatabase().updateDatabase(current.id,"saver", "true");
+        }
     }
 }

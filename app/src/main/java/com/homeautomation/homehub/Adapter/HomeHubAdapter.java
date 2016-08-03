@@ -37,6 +37,7 @@ public class HomeHubAdapter extends RecyclerView.Adapter<HomeHubAdapter.HubAdapt
     public void FillAppliance(ArrayList<Appliance> appliances) {
         this.appliances = appliances;
         notifyDataSetChanged();
+
     }
 
     @Override
@@ -51,11 +52,14 @@ public class HomeHubAdapter extends RecyclerView.Adapter<HomeHubAdapter.HubAdapt
         Appliance current = appliances.get(position);
         if(!current.name.contentEquals("none") && !current.arduinoCode.contentEquals("")) {
             int bg = General.getColor(current.color);
+            if (current.color.contentEquals("color20")){
+                holder.tv.setTextColor(context.getResources().getColor(R.color.white));
+                holder.aSwitch.setTextColor(context.getResources().getColor(R.color.white));
+            }
             holder.tv.setText(current.name +" - "+ current.status);
             //holder.tv.setTextColor(context.getResources().getColor(bg));
             holder.aSwitch.setChecked(getStatus(current.status));
             holder.aSwitch.setText(getConnection(current.status));
-            //holder.aSwitch.setTextColor(context.getResources().getColor(bg));
             holder.relativeLayout.setBackgroundColor(context.getResources().getColor(bg));
         }
     }
@@ -97,7 +101,7 @@ public class HomeHubAdapter extends RecyclerView.Adapter<HomeHubAdapter.HubAdapt
             aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    checkListener.checkChange(compoundButton,b,getPosition());
+                    checkListener.checkChange(aSwitch,aSwitch.isChecked(),getPosition());
                 }
             });
         }
