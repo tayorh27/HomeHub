@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelUuid;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -35,17 +35,20 @@ import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.callbacks.OnCheckChangeListener;
 import com.homeautomation.homehub.databases.UserLocalDatabase;
 import com.homeautomation.homehub.information.Appliance;
+import com.homeautomation.homehub.information.History;
 import com.homeautomation.homehub.information.User;
 import com.homeautomation.homehub.utility.General;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class HomeHub extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnCheckChangeListener {
+        implements NavigationView.OnNavigationItemSelectedListener, OnCheckChangeListener, View.OnClickListener {
 
     UserLocalDatabase userLocalDatabase;
     User user;
@@ -69,7 +72,7 @@ public class HomeHub extends AppCompatActivity
     General general;
 
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+    com.github.clans.fab.FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
     RecyclerView recyclerView;
     HomeHubAdapter adapter;
     ArrayList<Appliance> customData = new ArrayList<>();
@@ -91,6 +94,15 @@ public class HomeHub extends AppCompatActivity
 
         uimageView = (ImageView) findViewById(R.id.user_image);
         utextView = (TextView) findViewById(R.id.user_nickname);
+
+        materialDesignFAM = (FloatingActionMenu)findViewById(R.id.material_design_android_floating_action_menu);
+        floatingActionButton1 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
+        floatingActionButton2 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
+        floatingActionButton3 = (com.github.clans.fab.FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
+
+        floatingActionButton1.setOnClickListener(this);
+        floatingActionButton2.setOnClickListener(this);
+        floatingActionButton3.setOnClickListener(this);
 
         userLocalDatabase = new UserLocalDatabase(HomeHub.this);
         user = userLocalDatabase.getStoredUser();
@@ -151,7 +163,7 @@ public class HomeHub extends AppCompatActivity
         return true;
     }
 
-    private void setLayout(){
+    private void setLayout() {
         String title = userLocalDatabase.getLayout_();
         //MenuItem menuItem = myMenu.findItem(R.id.action_gridList);
         if (title.contentEquals(getResources().getString(R.string.action_grid))) {
@@ -183,18 +195,14 @@ public class HomeHub extends AppCompatActivity
                 recyclerView.setLayoutManager(new LinearLayoutManager(HomeHub.this));
                 menuItem.setTitle(getResources().getString(R.string.action_list));
                 menuItem.setIcon(R.drawable.ic_view_quilt_white_24px);
-                userLocalDatabase.setLayoutInput("List");
+                userLocalDatabase.setLayoutInput("Grid");
             } else {
                 //Toast.makeText(HomeHub.this, "list", Toast.LENGTH_SHORT).show();
                 recyclerView.setLayoutManager(new GridLayoutManager(HomeHub.this, 2, LinearLayoutManager.VERTICAL, false));
                 menuItem.setTitle(getResources().getString(R.string.action_grid));
                 menuItem.setIcon(R.drawable.ic_view_list_white_24px);
-                userLocalDatabase.setLayoutInput("Grid");
+                userLocalDatabase.setLayoutInput("List");
             }
-//            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.ic_view_quilt_white_24px);
-//            Drawable getIcon1 = new BitmapDrawable(b);
-//            Bitmap b2 = BitmapFactory.decodeResource(getResources(), R.drawable.ic_view_list_white_24px);
-//            Drawable getIcon2 = new BitmapDrawable(b2);
             DisplayAll();
         }
         if (id == R.id.action_paired) {
@@ -217,14 +225,14 @@ public class HomeHub extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
+        } else if (id == R.id.nav_history) {//HistoryActivity
+            startActivity(new Intent(HomeHub.this, CalendarActivity.class));
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_schedule) {
+            startActivity(new Intent(HomeHub.this, ScheduleActivity.class));
         } else if (id == R.id.nav_settings) {
             startActivity(new Intent(HomeHub.this, SettingsActivity.class));
         }
@@ -232,6 +240,54 @@ public class HomeHub extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void HighPerformance() {
+        ArrayList<Appliance> customHigh = MyApplication.getWritableDatabase().getAllMyPosts();
+        for (int i = 0; i < customHigh.size(); i++) {
+            Appliance current = customHigh.get(i);
+            if (current.high) {
+                MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "on");
+            } else {
+                MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");
+            }
+        }
+        storeHistory("High Performance mode was switched on.");
+        DisplayAll();
+        Toast.makeText(HomeHub.this, "High Performance mode has been switched on.", Toast.LENGTH_LONG).show();
+        materialDesignFAM.close(true);
+    }
+
+    private void Balanced() {
+        ArrayList<Appliance> customHigh = MyApplication.getWritableDatabase().getAllMyPosts();
+        for (int i = 0; i < customHigh.size(); i++) {
+            Appliance current = customHigh.get(i);
+            if (current.balanced) {
+                MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "on");
+            } else {
+                MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");
+            }
+        }
+        storeHistory("Balanced mode was switched on.");
+        DisplayAll();
+        Toast.makeText(HomeHub.this, "Balanced mode has been switched on.", Toast.LENGTH_LONG).show();
+        materialDesignFAM.close(true);
+    }
+
+    private void PowerSaver() {
+        ArrayList<Appliance> customHigh = MyApplication.getWritableDatabase().getAllMyPosts();
+        for (int i = 0; i < customHigh.size(); i++) {
+            Appliance current = customHigh.get(i);
+            if (current.saver) {
+                MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "on");
+            } else {
+                MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");
+            }
+        }
+        storeHistory("Power Saver mode was switched on.");
+        DisplayAll();
+        Toast.makeText(HomeHub.this, "Power Saver mode has been switched on.", Toast.LENGTH_LONG).show();
+        materialDesignFAM.close(true);
     }
 
     private void Disconnect() {
@@ -305,6 +361,16 @@ public class HomeHub extends AppCompatActivity
         Toast.makeText(HomeHub.this, s, Toast.LENGTH_LONG).show();
     }
 
+    private void storeHistory(String history) {
+        ArrayList<History> current = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMM/yyyy hh:mm:ss a");
+        String strDate = sdf.format(c.getTime());
+        History history1 = new History(history, strDate);
+        current.add(history1);
+        MyApplication.getWritableHistoryDatabase().insertMyPost(current, false);
+    }
+
     @Override
     public void checkChange(Switch _switch, boolean b, int position) {
         Appliance current = customData.get(position);
@@ -312,14 +378,30 @@ public class HomeHub extends AppCompatActivity
             //Toast.makeText(HomeHub.this, String.valueOf(_switch.isChecked()), Toast.LENGTH_LONG).show();
             //turnOffLed(current.arduinoCode);
             MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "off");//update in turnon method
+            storeHistory(current.name + " was switched off.");
             //DisplayAll();
         } else {
             //Toast.makeText(HomeHub.this, String.valueOf(_switch.isChecked()), Toast.LENGTH_LONG).show();
             //turnOnLed(current.arduinoCode);
             MyApplication.getWritableDatabase().updateDatabase(current.id, "status", "on");
+            storeHistory(current.name + " was switched on.");
             //DisplayAll();
         }
         DisplayAll();
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.material_design_floating_action_menu_item1) {
+            HighPerformance();
+        }
+        if (id == R.id.material_design_floating_action_menu_item2) {
+            Balanced();
+        }
+        if (id == R.id.material_design_floating_action_menu_item3) {
+            PowerSaver();
+        }
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {//UI THREAD

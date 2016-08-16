@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select an appliance"
+                android:textSize="15sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <Spinner
+                android:id="@+id/appliances_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:prompt="@string/AppName"
+                android:spinnerMode="dialog" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tv_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Appliance mode: OFF"
+                android:textSize="15sp" />
+
+            <Switch
+                android:id="@+id/app_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tv_start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Start time"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btn_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Click to Set Time" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/tv_timeout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Set Timeout"
+                android:textSize="15sp" />
+        </TableRow>
+
+        <TableRow>
+
+            <EditText
+                android:id="@+id/et_timeout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+            <Spinner
+                android:id="@+id/timeout_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/entry_timeout"
+                android:spinnerMode="dropdown" />
+        </TableRow>
+
+    </TableLayout>
+
+
+</RelativeLayout>

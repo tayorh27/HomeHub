@@ -19,10 +19,24 @@
     <string name="action_gridList">Grid | List</string>
     <string name="action_grid">Grid</string>
     <string name="action_list">List</string>
+    <string name="history">History</string>
 
     <string-array name="hub_settings">
         <item>High Performance</item>
         <item>Balanced</item>
         <item>Power Saver</item>
+    </string-array>
+    <string name="title_activity_schedule">Scheduled Appliances</string>
+    <string name="AppName">Select an Appliance</string>
+    <string name="clearAll">Clear All</string>
+    <string name="calendarActivity">Select Date</string>
+    <string name="viewAll">View All</string>
+    <string-array name="entry_timeout">
+        <item>Minute(s)</item>
+        <item>Hour(s)</item>
+        <item>Day(s)</item>
+        <item>Week(s)</item>
+        <item>Month(s)</item>
+        <item>Year(s)</item>
     </string-array>
 </resources>

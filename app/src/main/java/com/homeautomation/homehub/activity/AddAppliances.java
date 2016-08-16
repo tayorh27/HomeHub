@@ -112,7 +112,7 @@ public class AddAppliances extends AppCompatActivity implements OnClickListener 
 //            }
             getTag = view.getTag().toString();
             view.setAlpha((float) 0.2);
-            Toast.makeText(AddAppliances.this, getTag, Toast.LENGTH_LONG).show();
+            //Toast.makeText(AddAppliances.this, getTag, Toast.LENGTH_LONG).show();
         }catch (Exception e){
             e.printStackTrace();
             Log.e("selectedImage",e.toString());

@@ -45,12 +45,24 @@
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/action_settings" />
-        <activity android:name=".activity.HubSettings.HighPerformanceActivity"
-            android:label="@string/highperformance"/>
-        <activity android:name=".activity.HubSettings.BalancedActivity"
+        <activity
+            android:name=".activity.HubSettings.HighPerformanceActivity"
+            android:label="@string/highperformance" />
+        <activity
+            android:name=".activity.HubSettings.BalancedActivity"
             android:label="@string/balanced" />
-        <activity android:name=".activity.HubSettings.PowerSaverActivity"
+        <activity
+            android:name=".activity.HubSettings.PowerSaverActivity"
             android:label="@string/powersaver" />
+        <activity
+            android:name=".activity.HistoryActivity"
+            android:label="@string/history" />
+        <activity
+            android:name=".activity.ScheduleActivity"
+            android:label="@string/title_activity_schedule"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.CalendarActivity"
+            android:label="@string/calendarActivity"/>
     </application>
 
 </manifest>

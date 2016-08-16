@@ -141,7 +141,7 @@
                         android:layout_margin="10dp"
                         android:layout_weight="1"/>
 
-                    <ImageButton
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/avatar12"
                         android:layout_width="72dp"
                         android:layout_height="72dp"

@@ -126,6 +126,7 @@ public class BluetoothConnect extends AppCompatActivity {
             i.putExtra(EXTRA_ADDRESS, address); //this will be received at ledControl (class) Activity
             i.putExtra(EXTRA_NAME,name);
             startActivity(i);
+            finish();
         }
     };
 
