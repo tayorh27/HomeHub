@@ -61,7 +61,7 @@ public class UserLocalDatabase {
     }
 
     public int getCounter(){
-        return userPreference.getInt("counter", 1);
+        return userPreference.getInt("counter", 0);
     }
 
     public void setLayoutInput(String layout){

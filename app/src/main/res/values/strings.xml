@@ -34,9 +34,5 @@
     <string-array name="entry_timeout">
         <item>Minute(s)</item>
         <item>Hour(s)</item>
-        <item>Day(s)</item>
-        <item>Week(s)</item>
-        <item>Month(s)</item>
-        <item>Year(s)</item>
     </string-array>
 </resources>

@@ -30,7 +30,7 @@ public class ApplianceSchedule {
         if (clearPrevious) {
             deleteAll();
         }
-        String sql = "INSERT INTO " + ApplianceScheduleHelper.TABLE_NAME_MYPOST + " VALUES(?,?,?,?,?,?,?);";
+        String sql = "INSERT INTO " + ApplianceScheduleHelper.TABLE_NAME_MYPOST + " VALUES(?,?,?,?,?,?,?,?);";
         //compile statement and start a transaction
         SQLiteStatement statement = sqLiteDatabase.compileStatement(sql);
         sqLiteDatabase.beginTransaction();
@@ -39,12 +39,13 @@ public class ApplianceSchedule {
             Schedule current = lists.get(i);
             statement.clearBindings();
 
-            statement.bindString(2, current.app_name);
-            statement.bindString(3, current.app_code);
-            statement.bindString(4, current.app_status);
-            statement.bindString(5, current.datetime);
-            statement.bindString(6, current.length);
-            statement.bindString(7, current.nStatus);
+            statement.bindString(2, current.app_id);
+            statement.bindString(3, current.app_name);
+            statement.bindString(4, current.app_code);
+            statement.bindString(5, current.app_status);
+            statement.bindString(6, current.datetime);
+            statement.bindString(7, current.length);
+            statement.bindString(8, current.nStatus);
             statement.execute();
         }
         sqLiteDatabase.setTransactionSuccessful();
@@ -56,6 +57,7 @@ public class ApplianceSchedule {
 
         String[] columns = {
                 ApplianceScheduleHelper.COLUMN_ID,
+                ApplianceScheduleHelper.COLUMN_APP_ID,
                 ApplianceScheduleHelper.COLUMN_APPNAME,
                 ApplianceScheduleHelper.COLUMN_APPCODE,
                 ApplianceScheduleHelper.COLUMN_APPSTATUS,
@@ -68,6 +70,7 @@ public class ApplianceSchedule {
             while (cursor.moveToNext()) {
                 Schedule current = new Schedule();
                 current.id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ApplianceScheduleHelper.COLUMN_ID)));
+                current.app_id = cursor.getString(cursor.getColumnIndex(ApplianceScheduleHelper.COLUMN_APP_ID));
                 current.app_name = cursor.getString(cursor.getColumnIndex(ApplianceScheduleHelper.COLUMN_APPNAME));
                 current.app_code = cursor.getString(cursor.getColumnIndex(ApplianceScheduleHelper.COLUMN_APPCODE));
                 current.app_status = cursor.getString(cursor.getColumnIndex(ApplianceScheduleHelper.COLUMN_APPSTATUS));
@@ -86,10 +89,10 @@ public class ApplianceSchedule {
         sqLiteDatabase.delete(ApplianceScheduleHelper.TABLE_NAME_MYPOST, null, null);
     }
 
-    public void updateDatabase(int foreignKey, String what_to_update, String status) {
+    public void updateDatabase(String foreignKey, String what_to_update, String status) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(what_to_update, status);//ApplianceScheduleHelper.COLUMN_STATUS
-        sqLiteDatabase.update(ApplianceScheduleHelper.TABLE_NAME_MYPOST, contentValues, ApplianceScheduleHelper.COLUMN_ID + "=" + foreignKey, null);//
+        sqLiteDatabase.update(ApplianceScheduleHelper.TABLE_NAME_MYPOST, contentValues, ApplianceScheduleHelper.COLUMN_APP_ID + "=" + foreignKey, null);//
         Log.e("UPDATE", "database updated to " + status);
     }
 
@@ -107,15 +110,17 @@ public class ApplianceSchedule {
         public static final String TABLE_NAME_MYPOST = "appliancesSchedule101";
         public static final String COLUMN_ID = "_id";
 
+        public static final String COLUMN_APP_ID = "app_id";
         public static final String COLUMN_APPNAME = "applianceName";
-        public static final String COLUMN_APPCODE = "color";
-        public static final String COLUMN_APPSTATUS = "arduino_code";
-        public static final String COLUMN_DATETIME = "status";
-        public static final String COLUMN_LENGTH = "high";
-        public static final String COLUMN_NSTATUS = "balanced";
+        public static final String COLUMN_APPCODE = "code";
+        public static final String COLUMN_APPSTATUS = "mode";
+        public static final String COLUMN_DATETIME = "datetime";
+        public static final String COLUMN_LENGTH = "length";
+        public static final String COLUMN_NSTATUS = "status";
 
         private static final String CREATE_TABLE_MYPOST = "CREATE TABLE " + TABLE_NAME_MYPOST + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                COLUMN_APP_ID + " TEXT," +
                 COLUMN_APPNAME + " TEXT," +
                 COLUMN_APPCODE + " TEXT," +
                 COLUMN_APPSTATUS + " TEXT," +

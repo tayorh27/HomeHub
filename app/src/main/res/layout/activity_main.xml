@@ -12,5 +12,5 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/home_automation" />
+        android:src="@drawable/green_house_icon_312519" />
 </RelativeLayout>

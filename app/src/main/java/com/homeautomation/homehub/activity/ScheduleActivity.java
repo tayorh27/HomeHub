@@ -32,14 +32,19 @@ import android.widget.Toast;
 import com.homeautomation.homehub.Adapter.ScheduleAdapter;
 import com.homeautomation.homehub.MyApplication;
 import com.homeautomation.homehub.R;
+import com.homeautomation.homehub.Service.ServiceProcessingTask;
 import com.homeautomation.homehub.callbacks.OnClickListener;
 import com.homeautomation.homehub.information.Appliance;
 import com.homeautomation.homehub.information.History;
 import com.homeautomation.homehub.information.Schedule;
+import com.homeautomation.homehub.utility.GetAppDetails;
+import com.homeautomation.homehub.utility.TimeUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ScheduleActivity extends AppCompatActivity implements OnClickListener, View.OnClickListener {
 
@@ -58,14 +63,15 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
         setContentView(R.layout.activity_schedule);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         calendar = Calendar.getInstance();
         hour = calendar.get(Calendar.HOUR_OF_DAY);
         min = calendar.get(Calendar.MINUTE);
-        showTime(hour,min, String.valueOf(Calendar.AM_PM));
+        showTime(hour, min, String.valueOf(Calendar.AM_PM));
 
-        recyclerView = (RecyclerView)findViewById(R.id.recyclerView_schedule);
-        relativeLayout = (RelativeLayout)findViewById(R.id.schedule_home);
-        linearLayout = (LinearLayout)findViewById(R.id.noLayout);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_schedule);
+        relativeLayout = (RelativeLayout) findViewById(R.id.schedule_home);
+        linearLayout = (LinearLayout) findViewById(R.id.noLayout);
         adapter = new ScheduleAdapter(ScheduleActivity.this, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(ScheduleActivity.this));
         recyclerView.setAdapter(adapter);
@@ -82,40 +88,40 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
 
     private void showTime(int hour, int min, String am_pm) {
         String _setTime = String.valueOf(new StringBuilder().append(hour).append(":")
-                .append(min).append(" "+am_pm));
+                .append(min));
         setTime_ = _setTime;
     }
 
     private TimePickerDialog.OnTimeSetListener mTime = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker timePicker, int i, int i1) {
-            ViewGroup vg=(ViewGroup) timePicker.getChildAt(0);
-            String am_pm = ((Button)vg.getChildAt(2)).getText().toString();
-            showTime(i,i1,am_pm);
+            ViewGroup vg = (ViewGroup) timePicker.getChildAt(0);
+            String am_pm = "";//((Button)vg.getChildAt(2)).getText().toString();
+            showTime(i, i1, am_pm);
         }
     };
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        if(id == 999){
-            return new TimePickerDialog(this, mTime, hour, min, false);
+        if (id == 999) {
+            return new TimePickerDialog(this, mTime, hour, min, true);
         }
         return super.onCreateDialog(id);
     }
 
-    private ArrayList<String> get_all_appliance_name(){
+    private ArrayList<String> get_all_appliance_name() {
         ArrayList<Appliance> gApp = MyApplication.getWritableDatabase().getAllMyPosts();
         ArrayList<String> retApp = new ArrayList<>();
-        for (Appliance item:gApp) {
+        for (Appliance item : gApp) {
             retApp.add(item.name);//+"/"+item.arduinoCode
         }
-        return  retApp;
+        return retApp;
     }
 
-    private String getStatus(boolean mode){
-        if(mode){
+    private String getStatus(boolean mode) {
+        if (mode) {
             return "ON";
-        }else {
+        } else {
             return "OFF";
         }
     }
@@ -129,7 +135,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_clear_all){
+        if (id == R.id.action_clear_all) {
             ConfirmationDialog();
         }
         return super.onOptionsItemSelected(item);
@@ -154,7 +160,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
                 MyApplication.getWritableScheduleDatabase().deleteAll();
                 ShowAll1();
                 alertDialog.dismiss();
-                Toast.makeText(ScheduleActivity.this,"Scheduled Appliances have been cleared.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScheduleActivity.this, "Scheduled Appliances have been cleared.", Toast.LENGTH_SHORT).show();
             }
         });
         alertDialog.show();
@@ -167,25 +173,25 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
         dialog.setCanceledOnTouchOutside(false);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.custom_add_schedule_layout, (ViewGroup) findViewById(R.id.custom_layout), false);
-        final Spinner app_spin = (Spinner)view.findViewById(R.id.appliances_spinner);
+        final Spinner app_spin = (Spinner) view.findViewById(R.id.appliances_spinner);
         final Switch app_mode = (Switch) view.findViewById(R.id.app_switch);
-        final Spinner timeout_spin = (Spinner)view.findViewById(R.id.timeout_spinner);
+        final Spinner timeout_spin = (Spinner) view.findViewById(R.id.timeout_spinner);
         final EditText editText = (EditText) view.findViewById(R.id.et_timeout);
-        final Button setTime = (Button)view.findViewById(R.id.btn_time);
-        final TextView tvMode = (TextView)view.findViewById(R.id.tv_mode);
+        final Button setTime = (Button) view.findViewById(R.id.btn_time);
+        final TextView tvMode = (TextView) view.findViewById(R.id.tv_mode);
         app_mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(app_mode.isChecked()) {
+                if (app_mode.isChecked()) {
                     tvMode.setText("Set Appliance mode: ON");
-                }else {
+                } else {
                     tvMode.setText("Set Appliance mode: OFF");
                 }
             }
         });
         setTime.setOnClickListener(this);
         setTime.setText(setTime_);
-        ArrayAdapter<String> adapt = new ArrayAdapter<String>(ScheduleActivity.this,android.R.layout.simple_list_item_1,get_all_appliance_name());
+        ArrayAdapter<String> adapt = new ArrayAdapter<String>(ScheduleActivity.this, android.R.layout.simple_list_item_1, get_all_appliance_name());
         app_spin.setAdapter(adapt);
         dialog.setButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -198,23 +204,47 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (editText.getText().length() > 0) {
-                    String app_name = app_spin.getSelectedItem().toString();
-                    int app_position = app_spin.getSelectedItemPosition();
-                    String app_code = "arduino"+(app_position+1);
-                    String app_status = getStatus(app_mode.isChecked());
-                    Calendar c = Calendar.getInstance();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMM/yyyy");//hh:mm:ss a
-                    String datetime = sdf.format(c.getTime())+ " "+setTime_;
-                    String length = editText.getText().toString()+" "+timeout_spin.getSelectedItem().toString();
-                    ArrayList<Schedule> current = new ArrayList<>();
-                    Schedule sc = new Schedule(app_name,app_code,app_status,datetime,length,"Pending");
-                    current.add(sc);
-                    MyApplication.getWritableScheduleDatabase().insertMyPost(current, false);
-                    ArrayList<History> storeHis = new ArrayList<History>();
-                    History his = new History(app_name+" was scheduled to "+app_status+" for "+length,datetime);
-                    storeHis.add(his);
-                    MyApplication.getWritableHistoryDatabase().insertMyPost(storeHis,false);
-                    ShowAll();
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+                        Date currentDate = format.parse(hour + ":" + min);
+                        Date d = format.parse(setTime_);
+                        //Time getMilli = Time.valueOf(setTime_);
+                        long currentMilli = currentDate.getTime();
+                        long milli = d.getTime();
+                        long usedMilli = milli - currentMilli;
+
+                        if (usedMilli <= 0) {
+                            Toast.makeText(ScheduleActivity.this, "please select a future time", Toast.LENGTH_LONG).show();
+                            dialog.dismiss();
+                            return;
+                        }
+
+                        String app_name = app_spin.getSelectedItem().toString();
+                        String[] details = GetAppDetails.details(app_name);
+                        //int app_position = app_spin.getSelectedItemPosition();
+                        String app_code = details[1];//"arduino" + (app_position + 1);
+                        String app_status = getStatus(app_mode.isChecked());
+                        Calendar c = Calendar.getInstance();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MMMM/yyyy");//hh:mm:ss a
+                        String datetime = sdf.format(c.getTime()) + " " + setTime_;
+                        String length = editText.getText().toString() + " " + timeout_spin.getSelectedItem().toString();
+                        ArrayList<Schedule> current = new ArrayList<>();
+                        Schedule sc = new Schedule(details[1],app_name, app_code, app_status, datetime, length, TimeUtils.TimeLeft(usedMilli));//"Pending"
+                        current.add(sc);
+                        MyApplication.getWritableScheduleDatabase().insertMyPost(current, false);
+                        ArrayList<History> storeHis = new ArrayList<History>();
+                        History his = new History(app_name + " was scheduled to " + app_status + " for " + length, datetime);
+                        storeHis.add(his);
+                        MyApplication.getWritableHistoryDatabase().insertMyPost(storeHis, false);
+                        ShowAll();
+                        /////CountDown Session
+                        ServiceProcessingTask serviceProcessingTask = new ServiceProcessingTask(ScheduleActivity.this,Integer.parseInt(details[0]), app_name, app_code, app_status, length, usedMilli, 1000);
+                        serviceProcessingTask.start();
+                        Toast.makeText(ScheduleActivity.this, app_name + " has been scheduled for " + TimeUtils.TimeLeft(usedMilli) + " and setTime = " + setTime_, Toast.LENGTH_LONG).show();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    ////End CountDown Session
                     dialog.dismiss();
                 } else {
                     Toast.makeText(ScheduleActivity.this, "please enter a timeout session", Toast.LENGTH_LONG).show();
@@ -228,7 +258,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
 
     private void ShowAll() {
         getAll = MyApplication.getWritableScheduleDatabase().getAllMyPosts();
-        if(!getAll.isEmpty()){
+        if (!getAll.isEmpty()) {
             linearLayout.setVisibility(View.GONE);
         }
         adapter.FillSchedule(getAll);
@@ -236,7 +266,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
 
     private void ShowAll1() {
         ArrayList<Schedule> getAll1 = MyApplication.getWritableScheduleDatabase().getAllMyPosts();
-        if(!getAll1.isEmpty()){
+        if (!getAll1.isEmpty()) {
             linearLayout.setVisibility(View.GONE);
         }
         adapter.FillSchedule(getAll1);
@@ -245,6 +275,7 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
     @Override
     public void clicked(View view, int position) {
         int id = getAll.get(position).id;
+        final String ai = getAll.get(position).app_id;
         final String n = getAll.get(position).app_name;
         final String cd = getAll.get(position).app_code;
         final String s = getAll.get(position).app_status;
@@ -253,13 +284,13 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
         final String ns = getAll.get(position).nStatus;
         MyApplication.getWritableScheduleDatabase().deleteDatabase(id);
         ShowAll();
-        Snackbar.make(relativeLayout,"History deleted.",Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
+        Snackbar.make(relativeLayout, "History deleted.", Snackbar.LENGTH_LONG).setAction("UNDO", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayList<Schedule> c = new ArrayList<>();
-                Schedule sch = new Schedule(n,cd,s,d,l,ns);
+                Schedule sch = new Schedule(ai,n, cd, s, d, l, ns);
                 c.add(sch);
-                MyApplication.getWritableScheduleDatabase().insertMyPost(c,false);
+                MyApplication.getWritableScheduleDatabase().insertMyPost(c, false);
                 ShowAll();
             }
         }).show();
@@ -268,12 +299,12 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if(id == R.id.btn_time){
+        if (id == R.id.btn_time) {
             ShowDialog();
         }
     }
 
-    private void ShowDialog(){
+    private void ShowDialog() {
         showDialog(999);
     }
 }
