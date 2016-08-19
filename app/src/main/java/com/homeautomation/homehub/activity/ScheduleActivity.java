@@ -238,7 +238,8 @@ public class ScheduleActivity extends AppCompatActivity implements OnClickListen
                         MyApplication.getWritableHistoryDatabase().insertMyPost(storeHis, false);
                         ShowAll();
                         /////CountDown Session
-                        ServiceProcessingTask serviceProcessingTask = new ServiceProcessingTask(ScheduleActivity.this,Integer.parseInt(details[0]), app_name, app_code, app_status, length, usedMilli, 1000);
+                        int schedule_id = MyApplication.getWritableScheduleDatabase().getLastId();
+                        ServiceProcessingTask serviceProcessingTask = new ServiceProcessingTask(ScheduleActivity.this,Integer.parseInt(details[0]),schedule_id, app_name, app_code, app_status, length, usedMilli, 1000);
                         serviceProcessingTask.start();
                         Toast.makeText(ScheduleActivity.this, app_name + " has been scheduled for " + TimeUtils.TimeLeft(usedMilli) + " and setTime = " + setTime_, Toast.LENGTH_LONG).show();
                     } catch (ParseException e) {

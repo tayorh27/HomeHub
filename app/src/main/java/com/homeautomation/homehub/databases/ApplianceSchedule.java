@@ -85,14 +85,36 @@ public class ApplianceSchedule {
         return currentData;
     }
 
+    public int getLastId() {
+        int id=0;
+        String[] columns = {
+                ApplianceScheduleHelper.COLUMN_ID,
+                ApplianceScheduleHelper.COLUMN_APP_ID,
+                ApplianceScheduleHelper.COLUMN_APPNAME,
+                ApplianceScheduleHelper.COLUMN_APPCODE,
+                ApplianceScheduleHelper.COLUMN_APPSTATUS,
+                ApplianceScheduleHelper.COLUMN_DATETIME,
+                ApplianceScheduleHelper.COLUMN_LENGTH,
+                ApplianceScheduleHelper.COLUMN_NSTATUS
+        };
+        Cursor cursor = sqLiteDatabase.query(ApplianceScheduleHelper.TABLE_NAME_MYPOST, columns, null, null, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            cursor.moveToLast();
+            id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(ApplianceScheduleHelper.COLUMN_ID)));
+            //cursor.close();
+        }
+        Log.e("gotID", "my id is " + id);
+        return id;
+    }
+
     public void deleteAll() {
         sqLiteDatabase.delete(ApplianceScheduleHelper.TABLE_NAME_MYPOST, null, null);
     }
 
-    public void updateDatabase(String foreignKey, String what_to_update, String status) {
+    public void updateDatabase(int foreignKey, String what_to_update, String status) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(what_to_update, status);//ApplianceScheduleHelper.COLUMN_STATUS
-        sqLiteDatabase.update(ApplianceScheduleHelper.TABLE_NAME_MYPOST, contentValues, ApplianceScheduleHelper.COLUMN_APP_ID + "=" + foreignKey, null);//
+        sqLiteDatabase.update(ApplianceScheduleHelper.TABLE_NAME_MYPOST, contentValues, ApplianceScheduleHelper.COLUMN_ID + "=" + foreignKey, null);//
         Log.e("UPDATE", "database updated to " + status);
     }
 

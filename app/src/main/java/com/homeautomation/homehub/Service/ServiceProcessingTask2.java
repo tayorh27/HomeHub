@@ -11,14 +11,15 @@ import com.homeautomation.homehub.utility.NotificationBar;
  */
 public class ServiceProcessingTask2 extends CountDownTimer {
 
-    int id;
+    int id,schedule_id;
     String applianceName,arduinoCode,mode,timeout;
     Context context;
     NotificationBar notificationBar;
-    public ServiceProcessingTask2(Context context,int id,String applianceName,String arduinoCode,String mode,String timeout, long millisInFuture, long countDownInterval) {
+    public ServiceProcessingTask2(Context context,int id,int schedule_id,String applianceName,String arduinoCode,String mode,String timeout, long millisInFuture, long countDownInterval) {
         super(millisInFuture, countDownInterval);
         this.context = context;
         this.id = id;
+        this.schedule_id = schedule_id;
         this.applianceName = applianceName;
         this.arduinoCode = arduinoCode;
         this.mode = mode;
@@ -42,7 +43,7 @@ public class ServiceProcessingTask2 extends CountDownTimer {
     @Override
     public void onFinish() {
         notificationBar.ShowNotification(applianceName+ " has been completed");
-        MyApplication.getWritableScheduleDatabase().updateDatabase(String.valueOf(id),"status", "Completed");
+        MyApplication.getWritableScheduleDatabase().updateDatabase(schedule_id,"status", "Completed");
         MyApplication.getWritableDatabase().updateDatabase(id,"status", getStatus(mode));
     }
 }

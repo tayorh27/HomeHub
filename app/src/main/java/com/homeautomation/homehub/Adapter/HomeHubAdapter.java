@@ -1,6 +1,7 @@
 package com.homeautomation.homehub.Adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.homeautomation.homehub.R;
 import com.homeautomation.homehub.callbacks.OnCheckChangeListener;
 import com.homeautomation.homehub.information.Appliance;
+import com.homeautomation.homehub.utility.ApplianceImages;
 import com.homeautomation.homehub.utility.General;
 
 import java.util.ArrayList;
@@ -61,6 +63,7 @@ public class HomeHubAdapter extends RecyclerView.Adapter<HomeHubAdapter.HubAdapt
             holder.aSwitch.setChecked(getStatus(current.status));
             holder.aSwitch.setText(getConnection(current.status));
             holder.relativeLayout.setBackgroundColor(context.getResources().getColor(bg));
+            holder.iv.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), ApplianceImages.Appliance_image(current.name)));
         }
     }
 
